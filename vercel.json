@@ -1,0 +1,10 @@
+{
+    "version": 2,
+    "public": true,
+    "routes": [
+        {
+            "src": "/models/(.*)",
+            "dest": "/models/$1"
+        }
+    ]
+}
