@@ -8,7 +8,7 @@ import { useFrame } from '@react-three/fiber';
 export default function FloatingIsland({ onPortalClick, onLoad, ...props }: GroupProps & { onPortalClick: () => void; onLoad: () => void }) {
     const groupRef = useRef<THREE.Group>(null);
     const glowRef = useRef<THREE.Mesh>();
-    const { scene } = useGLTF('/models/f.glb');
+    const { scene } = useGLTF('@/models/f.glb');
 
     useEffect(() => {
         onLoad();

@@ -11,7 +11,7 @@ interface RoomProps extends GroupProps {
 }
 
 export default function Room({ onLoad, onClick, onDesktopClick, ...props }: RoomProps) {
-    const { scene } = useGLTF('/models/r.glb');
+    const { scene } = useGLTF('@/models/r.glb');
     const [hoveredObject, setHoveredObject] = useState<string | null>(null);
 
     useEffect(() => {
