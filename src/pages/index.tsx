@@ -1,14 +1,14 @@
 // pages/index.tsx
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { PerspectiveCamera, OrbitControls, Environment } from '@react-three/drei';
-import { ClosedSpaceScene } from 'src/components/three/ClosedSpaceScene';
+import { ClosedSpaceScene } from '@/components/three/ClosedSpaceScene';
 import * as THREE from 'three';
-import FloatingIsland from 'src/components/three/FloatingIsland';
+import FloatingIsland from "@/components/three/FloatingIsland";
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
 import { useRouter } from 'next/router';
 import { Suspense, lazy, useEffect, useRef, useState } from 'react';
 
-const LazyFloatingIsland = lazy(() => import('src/components/three/FloatingIsland'));
+const LazyFloatingIsland = lazy(() => import('@/components/three/FloatingIsland'));
 
 export default function Home() {
     const [cameraMode, setCameraMode] = useState<'free' | 'tracking'>('tracking');
