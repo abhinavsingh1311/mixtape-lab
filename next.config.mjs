@@ -1,31 +1,31 @@
-// next.config.js
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    reactStrictMode: true,
+    typescript: {
+        ignoreBuildErrors: false,
+    },
+    output: 'standalone',
     images: {
-        domains: ['mixtape-lab.vercel.app'],
+        unoptimized: true
     },
     webpack: (config) => {
         config.module.rules.push({
             test: /\.(glb|gltf)$/,
-            use: [
-                {
-                    loader: 'file-loader',
-                    options: {
-                        publicPath: '/_next/static/models',
-                        outputPath: 'static/models/',
-                        name: '[name].[hash].[ext]',
-                    },
-                },
-                {
-                    loader: 'webpack-gltf-loader',
-                    options: {
-                        publicPath: '/_next/static/models',
-                    }
-                }
-            ]
+            type: 'asset/resource',
+            generator: {
+                filename: 'static/models/[hash][ext]'
+            }
         });
         return config;
     },
+    async rewrites() {
+        return [
+            {
+                source: '/models/:path*',
+                destination: '/static/models/:path*'
+            }
+        ];
+    }
 };
 
 export default nextConfig;
