@@ -62,7 +62,14 @@ export default function Home() {
             )}
 
             {isIslandVisible && (
-                <Canvas shadows gl={{ toneMapping: THREE.ACESFilmicToneMapping }}>
+                <Canvas shadows gl={{
+                    toneMapping: THREE.ACESFilmicToneMapping,
+                    preserveDrawingBuffer: true
+                }} onCreated={(state) => {
+                    state.gl.forceContextRestore();
+                }}
+
+                >
                     <EffectComposer>
                         <Bloom
                             intensity={0.4}

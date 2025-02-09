@@ -1,4 +1,3 @@
-// components/three/FloatingIsland.tsx
 import { useGLTF } from '@react-three/drei';
 import { GroupProps, ThreeEvent } from '@react-three/fiber';
 import { useRef, useEffect } from 'react';
@@ -8,15 +7,16 @@ import { useFrame } from '@react-three/fiber';
 export default function FloatingIsland({ onPortalClick, onLoad, ...props }: GroupProps & { onPortalClick: () => void; onLoad: () => void }) {
     const groupRef = useRef<THREE.Group>(null);
     const glowRef = useRef<THREE.Mesh>();
-    const { scene } = useGLTF('./models/float.glb');
+    const { scene } = useGLTF('/models/float.glb');
     useEffect(() => {
-        // Notify parent when loaded
         onLoad();
     }, [onLoad]);
 
-    // Initialize scene and glow
     useEffect(() => {
-        // Scene setup
+        console.log('Loading float.glb from:', '/models/float.glb');
+    }, []);
+
+    useEffect(() => {
         scene.traverse((child) => {
             if (child instanceof THREE.Mesh) {
                 child.material = child.material.clone();
@@ -25,7 +25,6 @@ export default function FloatingIsland({ onPortalClick, onLoad, ...props }: Grou
             }
         });
 
-        // Glow setup
         const geometry = new THREE.SphereGeometry(3.5, 32, 32);
         const material = new THREE.MeshStandardMaterial({
             color: 0x00ffff,
@@ -47,7 +46,6 @@ export default function FloatingIsland({ onPortalClick, onLoad, ...props }: Grou
         };
     }, [scene]);
 
-    // Animation frames
     useFrame(({ clock }) => {
         if (glowRef.current) {
             const pulse = Math.sin(clock.elapsedTime * 1.5) * 0.03;

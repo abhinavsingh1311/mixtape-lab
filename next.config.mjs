@@ -1,14 +1,18 @@
-/** @type {import('next').NextConfig} */
+// next.config.js
 const nextConfig = {
-    output: 'standalone',
     images: {
-        unoptimized: true,
+        domains: ['https://mixtape-lab.vercel.app/'],
     },
-    // Add this if you're using webpack 5
     webpack: (config) => {
         config.module.rules.push({
             test: /\.(glb|gltf)$/,
-            type: 'asset/resource',
+            use: {
+                loader: 'file-loader',
+                options: {
+                    publicPath: '/_next/static/assets',
+                    outputPath: 'static/assets',
+                },
+            },
         });
         return config;
     },
