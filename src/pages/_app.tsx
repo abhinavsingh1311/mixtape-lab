@@ -6,24 +6,45 @@ import { AnimatePresence } from 'framer-motion';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import { useGLTF } from '@react-three/drei';
 import { useEffect } from 'react';
+import dynamic from 'next/dynamic';
 
-// Preload 3D models with correct paths
+// Constants for model paths
 const MODELS = {
     FLOATING_ISLAND: '/models/f.glb',
     ROOM: '/models/r.glb'
-};
+} as const;
 
-useGLTF.preload(MODELS.FLOATING_ISLAND);
-useGLTF.preload(MODELS.ROOM);
+// ModelPreloader component to handle model preloading
+function ModelPreloader() {
+    useEffect(() => {
+        const preloadModels = async () => {
+            try {
+                await Promise.all([
+                    useGLTF.preload(MODELS.FLOATING_ISLAND),
+                    useGLTF.preload(MODELS.ROOM)
+                ]);
+            } catch (error) {
+                console.error('Error preloading models:', error);
+            }
+        };
+
+        preloadModels();
+
+        // Cleanup function
+        return () => {
+            try {
+                useGLTF.clear;
+            } catch (error) {
+                console.error('Error clearing models:', error);
+            }
+        };
+    }, []);
+
+    return null;
+}
 
 function MyApp({ Component, pageProps }: AppProps) {
     const router = useRouter();
-
-    useEffect(() => {
-        return () => {
-            useGLTF.clear;
-        };
-    }, []);
 
     return (
         <ErrorBoundary
@@ -34,7 +55,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                         <p className="text-gray-700">{error.message}</p>
                         <div className="mt-4 text-sm text-gray-500">
                             <p>Debug information:</p>
-                            <pre className="mt-2 p-2 bg-gray-100 rounded text-left overflow-auto">
+                            <pre className="mt-2 p-2 bg-gray-100 rounded text-left overflow-auto max-h-48">
                                 {error.stack}
                             </pre>
                         </div>
@@ -48,6 +69,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                 </div>
             )}
         >
+            <ModelPreloader />
             <AnimatePresence mode="wait" onExitComplete={() => window.scrollTo(0, 0)}>
                 <Component {...pageProps} key={router.asPath} />
             </AnimatePresence>
@@ -55,4 +77,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     );
 }
 
-export default MyApp;
+// Disable SSR for the app to ensure proper model loading
+export default dynamic(() => Promise.resolve(MyApp), {
+    ssr: false
+});
