@@ -1,17 +1,13 @@
+/** @type {import('next').NextConfig} */
 const nextConfig = {
-    images: {
-        domains: ['mixtape-lab.vercel.app'],
-    },
+    reactStrictMode: true,
     webpack: (config) => {
         config.module.rules.push({
-            test: /\.(glb|gltf|hdr)$/,
+            test: /\.(glb|gltf)$/,
             type: 'asset/resource',
-            generator: {
-                filename: 'static/assets/[hash][ext]',
-            },
         });
         return config;
     },
-};
+}
 
-export default nextConfig;
+module.exports = nextConfig

@@ -1,4 +1,3 @@
-import { useState } from 'react';
 
 export default function DesktopOverlay({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
     if (!isOpen) return null;

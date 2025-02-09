@@ -1,3 +1,4 @@
+// components/three/Room.tsx
 import { useGLTF } from '@react-three/drei';
 import { GroupProps, ThreeEvent } from '@react-three/fiber';
 import { useEffect, useState } from 'react';

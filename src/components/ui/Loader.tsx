@@ -1,3 +1,4 @@
+// components/ui/Loader.tsx
 import { Html, useProgress } from '@react-three/drei';
 
 export default function Loader() {

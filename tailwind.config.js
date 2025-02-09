@@ -1,15 +1,17 @@
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    './src/**/*.{js,ts,jsx,tsx}',
+    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     extend: {
       colors: {
-        'neon-blue': '#4f46e5',
-        'neon-cyan': '#22d3ee',
-        'dark-bg': '#0a0a0a',
+        'neon-blue': '#00f3ff',
+        'neon-cyan': '#00ffff',
       },
     },
   },
   plugins: [],
-};
+}

@@ -1,3 +1,4 @@
+// components/three/FloatingIsland.tsx
 import { useGLTF } from '@react-three/drei';
 import { GroupProps, ThreeEvent } from '@react-three/fiber';
 import { useRef, useEffect } from 'react';
