@@ -7,24 +7,27 @@ import { useFrame } from '@react-three/fiber';
 export default function FloatingIsland({ onPortalClick, onLoad, ...props }: GroupProps & { onPortalClick: () => void; onLoad: () => void }) {
     const groupRef = useRef<THREE.Group>(null);
     const glowRef = useRef<THREE.Mesh>();
-    const { scene } = useGLTF('/models/float.glb');
+    const { scene } = useGLTF('/models/f.glb');
+
     useEffect(() => {
         onLoad();
-    }, [onLoad]);
 
-    useEffect(() => {
-        console.log('Loading float.glb from:', '/models/float.glb');
-    }, []);
-
-    useEffect(() => {
+        // Traverse the scene and handle materials
         scene.traverse((child) => {
             if (child instanceof THREE.Mesh) {
-                child.material = child.material.clone();
+                // Clone material to avoid shared references
+                if (Array.isArray(child.material)) {
+                    child.material = child.material.map((mat) => mat.clone());
+                } else {
+                    child.material = child.material.clone();
+                }
+
                 child.castShadow = true;
                 child.receiveShadow = true;
             }
         });
 
+        // Create glow effect
         const geometry = new THREE.SphereGeometry(3.5, 32, 32);
         const material = new THREE.MeshStandardMaterial({
             color: 0x00ffff,
@@ -32,19 +35,41 @@ export default function FloatingIsland({ onPortalClick, onLoad, ...props }: Grou
             emissiveIntensity: 1.0,
             transparent: true,
             opacity: 0.15,
-            side: THREE.DoubleSide
+            side: THREE.DoubleSide,
         });
 
         glowRef.current = new THREE.Mesh(geometry, material);
         glowRef.current.position.set(0, 2.3, 0);
         groupRef.current?.add(glowRef.current);
 
+        // Cleanup function
         return () => {
             if (glowRef.current) {
                 groupRef.current?.remove(glowRef.current);
+                glowRef.current.geometry.dispose();
+
+                // Dispose material safely
+                if (Array.isArray(glowRef.current.material)) {
+                    glowRef.current.material.forEach((mat) => mat.dispose());
+                } else {
+                    glowRef.current.material.dispose();
+                }
             }
+
+            // Dispose scene materials
+            scene.traverse((child) => {
+                if (child instanceof THREE.Mesh) {
+                    child.geometry.dispose();
+
+                    if (Array.isArray(child.material)) {
+                        child.material.forEach((mat) => mat.dispose());
+                    } else {
+                        child.material.dispose();
+                    }
+                }
+            });
         };
-    }, [scene]);
+    }, [scene, onLoad]);
 
     useFrame(({ clock }) => {
         if (glowRef.current) {

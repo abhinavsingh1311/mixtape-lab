@@ -3,16 +3,23 @@ import type { AppProps } from 'next/app';
 import '../styles/globals.css';
 import { useRouter } from 'next/router';
 import { AnimatePresence } from 'framer-motion';
+import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 
-export default function App({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps }: AppProps) {
     const router = useRouter();
-    const isHomePage = router.pathname === '/';
 
     return (
-        <div className={isHomePage ? 'grid-overlay' : ''}>
-            <AnimatePresence mode='wait'>
-                <Component {...pageProps} key={router.route} />
+        <ErrorBoundary fallback={(error) => (
+            <div className="error-screen">
+                <h1>Something went wrong</h1>
+                <p>{error.message}</p>
+            </div>
+        )}>
+            <AnimatePresence mode="wait" onExitComplete={() => window.scrollTo(0, 0)}>
+                <Component {...pageProps} key={router.asPath} />
             </AnimatePresence>
-        </div>
+        </ErrorBoundary>
     );
 }
+
+export default MyApp;
