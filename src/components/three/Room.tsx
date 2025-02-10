@@ -1,10 +1,8 @@
-// components/three/Room.tsx
-import { useGLTF } from '@react-three/drei';
 import { GroupProps, ThreeEvent } from '@react-three/fiber';
-import { useEffect, useState } from 'react';
+import { useRef, useEffect } from 'react';
+import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-
-const MODEL_PATH = '/models/room-optimized.glb';
+import { Text, useTexture } from '@react-three/drei';
 
 interface RoomProps extends GroupProps {
     onLoad: () => void;
@@ -12,99 +10,204 @@ interface RoomProps extends GroupProps {
     onDesktopClick: () => void;
 }
 
-export default function Room({ onLoad, onClick, onDesktopClick, ...props }: RoomProps) {
-    const [modelError, setModelError] = useState<Error | null>(null);
-    const { scene } = useGLTF(MODEL_PATH, undefined, undefined, (e: unknown) => {
-        const error = e instanceof Error ? e : new Error(String(e));
-        console.error('Error loading model:', error);
-        setModelError(error);
-    });
-    const [hoveredObject, setHoveredObject] = useState<string | null>(null);
+export default function ModernRoom({ onLoad, onClick, onDesktopClick, ...props }: RoomProps) {
+    const groupRef = useRef<THREE.Group>(null);
+    const spotlightRef = useRef<THREE.SpotLight>(null);
+    const wallArtTexture = useTexture(`images/new-living-room-image.png`);
+
 
     useEffect(() => {
-        if (modelError) {
-            console.error('Model failed to load:', modelError);
-            return;
+        onLoad();
+    }, [onLoad]);
+
+    useFrame(({ clock }) => {
+        if (spotlightRef.current) {
+            const intensity = 3 + Math.sin(clock.getElapsedTime() * 0.5) * 0.3;
+            spotlightRef.current.intensity = intensity;
         }
-
-        try {
-            scene.traverse((child) => {
-                if (child instanceof THREE.Mesh) {
-                    if (child.name === 'Plane025' || child.name === 'Plane.025') {
-                        child.userData.isDesktop = true;
-                    }
-
-                    child.material = child.material.clone();
-
-                    if (child.userData.isDesktop) {
-                        const material = child.material as THREE.MeshStandardMaterial;
-                        material.emissive = new THREE.Color(0x444444);
-                        material.emissiveIntensity = hoveredObject === child.name ? 2 : 1;
-                    }
-
-                    child.castShadow = true;
-                    child.receiveShadow = true;
-                }
-            });
-
-            const box = new THREE.Box3().setFromObject(scene);
-            const center = box.getCenter(new THREE.Vector3());
-            scene.position.sub(center);
-
-            onLoad();
-        } catch (e) {
-            const error = e instanceof Error ? e : new Error(String(e));
-            console.error('Error setting up model:', error);
-            setModelError(error);
-        }
-
-        // Cleanup function
-        return () => {
-            scene.traverse((child) => {
-                if (child instanceof THREE.Mesh) {
-                    child.geometry.dispose();
-                    if (Array.isArray(child.material)) {
-                        child.material.forEach((mat) => mat.dispose());
-                    } else {
-                        child.material.dispose();
-                    }
-                }
-            });
-        };
-    }, [scene, onLoad, hoveredObject, modelError]);
-
-    const handlePointerOver = (e: ThreeEvent<PointerEvent>) => {
-        if (e.object.userData.isDesktop) {
-            setHoveredObject(e.object.name);
-            document.body.style.cursor = 'pointer';
-        }
-    };
-
-    const handlePointerOut = () => {
-        setHoveredObject(null);
-        document.body.style.cursor = 'default';
-    };
-
-    const handleClick = (e: ThreeEvent<MouseEvent>) => {
-        e.stopPropagation();
-        if (e.object.userData.isDesktop) {
-            onDesktopClick();
-        } else {
-            onClick(e);
-        }
-    };
-
-    if (modelError) {
-        return null;
-    }
+    });
 
     return (
-        <primitive
-            object={scene}
-            {...props}
-            onClick={handleClick}
-            onPointerOver={handlePointerOver}
-            onPointerOut={handlePointerOut}
-        />
+        <group ref={groupRef} {...props} rotation={[0, Math.PI / 3.5, 0]}>
+            {/* Room structure */}
+            <group position={[0, 0, 0]}>
+                {/* Floor */}
+                <mesh receiveShadow rotation-x={-Math.PI / 2} position={[0, -0.1, 0]}>
+                    <planeGeometry args={[12, 12]} />
+                    <meshStandardMaterial
+                        color="#e5e5e5"
+                        metalness={0.3}
+                        roughness={0.15}
+                        emissive="#ffffff"
+                        emissiveIntensity={0.1}
+                    />
+                </mesh>
+
+                {/* Walls */}
+                <mesh receiveShadow position={[0, 5, -6]} rotation={[0, 0, 0]}>
+                    <planeGeometry args={[12, 10]} />
+                    <meshStandardMaterial
+                        color="#f8f9fa"
+                        metalness={0.1}
+                        roughness={0.15}
+                    />
+                </mesh>
+
+                {/* Wall Art Frame */}
+                <group position={[0, 4.5, -5.95]}>
+                    <mesh>
+                        <boxGeometry args={[5, 3.5, 0.2]} />
+                        <meshStandardMaterial
+                            color="#ffffff"
+                            metalness={0.3}
+                            roughness={0.2}
+                        />
+                    </mesh>
+                    <mesh position={[0, 0, 0.11]}>
+                        <planeGeometry args={[4.8, 3.3]} />
+                        <meshStandardMaterial
+                            map={wallArtTexture}
+                            emissiveMap={wallArtTexture}
+                            emissiveIntensity={0.8}
+                        />
+                    </mesh>
+                </group>
+
+                {/* Modern L-shaped Desk */}
+                <group position={[3.2, 0.4, -2.5]} onClick={onDesktopClick}>
+                    <mesh castShadow receiveShadow>
+                        <boxGeometry args={[5, 0.1, 2.5]} />
+                        <meshStandardMaterial
+                            color="#ffffff"
+                            metalness={0.5}
+                            roughness={0.1}
+                        />
+                    </mesh>
+                    {[[-2.4, 1.1], [2.4, 1.1], [-2.4, -1.1], [2.4, -1.1]].map(([x, z], i) => (
+                        <mesh key={i} castShadow position={[x, -0.4, z]}>
+                            <cylinderGeometry args={[0.08, 0.08, 0.8, 16]} />
+                            <meshStandardMaterial color="#e5e5e5" metalness={0.6} />
+                        </mesh>
+                    ))}
+                </group>
+
+                {/* Modern Sofa */}
+                <group position={[-3.5, 0.5, 2]} rotation={[0, -Math.PI / 4, 0]}>
+                    <mesh castShadow>
+                        <boxGeometry args={[4.5, 0.6, 1.8]} />
+                        <meshStandardMaterial
+                            color="#0B2447"
+                            metalness={0.2}
+                            roughness={0.4}
+                        />
+                    </mesh>
+                    <mesh castShadow position={[0, 0.9, -0.8]}>
+                        <boxGeometry args={[4.5, 1.8, 0.2]} />
+                        <meshStandardMaterial color="#0B2447" />
+                    </mesh>
+                    {[-2.1, 2.1].map((x) => (
+                        <mesh key={x} castShadow position={[x, 0.6, 0]}>
+                            <boxGeometry args={[0.2, 1.2, 1.8]} />
+                            <meshStandardMaterial color="#0B2447" />
+                        </mesh>
+                    ))}
+                </group>
+
+                {/* Coffee Table */}
+                <group position={[-2, 0.3, 3.2]}>
+                    <mesh castShadow>
+                        <cylinderGeometry args={[1, 1, 0.1, 32]} />
+                        <meshStandardMaterial
+                            color="#ffffff"
+                            metalness={0.7}
+                        />
+                    </mesh>
+                    <mesh position={[0, -0.4, 0]}>
+                        <cylinderGeometry args={[0.15, 0.15, 0.8, 16]} />
+                        <meshStandardMaterial color="#e5e5e5" />
+                    </mesh>
+                </group>
+
+                {/* Desktop Setup */}
+                <group position={[3.2, 1.7, -2.2]}>
+                    <mesh castShadow position={[0, 0.9, 0]} rotation={[0, -Math.PI / 8, 0]}>
+                        <boxGeometry args={[1.8, 1, 0.05]} />
+                        <meshStandardMaterial
+                            color="#2C3333"
+                            metalness={0.9}
+                        />
+                    </mesh>
+                    <mesh castShadow position={[0, 0.3, 0]}>
+                        <boxGeometry args={[0.2, 0.6, 0.2]} />
+                        <meshStandardMaterial color="#2C3333" />
+                    </mesh>
+                    <mesh castShadow position={[0, 0.1, 0.6]} rotation={[0.1, 0, 0]}>
+                        <boxGeometry args={[1, 0.02, 0.4]} />
+                        <meshStandardMaterial color="#2C3333" />
+                    </mesh>
+                </group>
+
+                {/* Enhanced Plant */}
+                <group position={[5, 1.8, -3]}>
+                    <mesh castShadow>
+                        <cylinderGeometry args={[0.25, 0.2, 0.5, 16]} />
+                        <meshStandardMaterial color="#4a4e69" />
+                    </mesh>
+                    {[0, Math.PI / 2, Math.PI, -Math.PI / 2].map((rot, i) => (
+                        <mesh key={i} position={[0, 0.5, 0]} rotation={[0, rot, 0]}>
+                            <sphereGeometry args={[0.4, 8, 8]} />
+                            <meshStandardMaterial color="#2a9d8f" />
+                        </mesh>
+                    ))}
+                </group>
+
+                {/* Decorative Rug */}
+                <mesh receiveShadow position={[0, 0.01, 2]} rotation-x={-Math.PI / 2}>
+                    <circleGeometry args={[2, 32]} />
+                    <meshStandardMaterial
+                        color="#f4a261"
+                        roughness={0.7}
+                    />
+                </mesh>
+            </group>
+
+            {/* Enhanced Lighting */}
+            <spotLight
+                ref={spotlightRef}
+                position={[2, 8, -1]}
+                angle={Math.PI / 3}
+                penumbra={1}
+                intensity={4}
+                castShadow
+                color="#ffffff"
+                shadow-mapSize-width={2048}
+                shadow-mapSize-height={2048}
+            />
+
+            <pointLight position={[-4, 5, 3]} intensity={3} color="#ffd6ff" />
+            <pointLight position={[5, 5, -4]} intensity={3} color="#c8ffd4" />
+            <ambientLight intensity={1.2} color="#ffffff" />
+
+            <rectAreaLight
+                position={[0, 5, -6]}
+                width={12}
+                height={8}
+                intensity={3}
+                color="#ffffff"
+                rotation={[0, 0, 0]}
+            />
+
+            {/* Decorative Text */}
+            <Text
+                position={[0, 5, -5.8]}
+                rotation={[0, 0, 0]}
+                color="#2a9d8f"
+                fontSize={0.4}
+                anchorX="center"
+                anchorY="middle"
+            >
+                Modern Living
+            </Text>
+        </group>
     );
 }

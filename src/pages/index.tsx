@@ -1,18 +1,17 @@
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { PerspectiveCamera, OrbitControls, Environment, Html, useProgress } from '@react-three/drei';
-import { Suspense, lazy, useEffect, useRef, useState } from 'react';
+import { PerspectiveCamera, OrbitControls } from '@react-three/drei';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { useRouter } from 'next/router';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
-
-const LazyFloatingIsland = lazy(() => import('@/components/three/FloatingIsland'));
+import FloatingIsland from '@/components/three/FloatingIsland';
+import { ClosedSpaceScene } from '@/components/three/ClosedSpaceScene';
 
 export default function Home() {
     const [cameraMode, setCameraMode] = useState<'free' | 'tracking'>('tracking');
     const [currentTime, setCurrentTime] = useState('');
     const [showPortalMessage, setShowPortalMessage] = useState(true);
     const [isIslandVisible, setIsIslandVisible] = useState(true);
-    const [isIslandLoaded, setIsIslandLoaded] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
@@ -29,7 +28,7 @@ export default function Home() {
     };
 
     return (
-        <div className="h-screen w-screen relative">
+        <div className="h-screen w-screen relative bg-black">
             {/* UI Elements */}
             <div className="fixed top-4 right-4 z-50">
                 <button
@@ -45,45 +44,68 @@ export default function Home() {
                 <div className="text-xl">{currentTime}</div>
             </div>
 
-            {!isIslandLoaded && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-                    <p className="text-white text-lg">Hang tight!</p>
-                </div>
-            )}
-
             {/* Canvas */}
             {isIslandVisible && (
                 <Canvas
                     shadows
-                    gl={{ toneMapping: THREE.ACESFilmicToneMapping, preserveDrawingBuffer: true }}
-                    onCreated={({ gl }) => gl.forceContextRestore()}
+                    gl={{
+                        antialias: true,
+                        toneMapping: THREE.ACESFilmicToneMapping,
+                        toneMappingExposure: 1.5
+                    }}
                 >
-                    <EffectComposer>
-                        <Bloom intensity={0.4} radius={2.5} luminanceThreshold={0.1} luminanceSmoothing={0.9} />
-                    </EffectComposer>
+                    <color attach="background" args={['#000000']} />
 
-                    <Environment files="/images/venice_sunset_4k.hdr" background backgroundBlurriness={0.5} />
+                    <Suspense fallback={null}>
+                        <EffectComposer>
+                            <Bloom
+                                intensity={1.5}
+                                radius={0.7}
+                                luminanceThreshold={0.1}
+                                luminanceSmoothing={0.9}
+                            />
+                        </EffectComposer>
 
-                    <Suspense fallback={<Loader />}>
-                        <LazyFloatingIsland
+                        <ClosedSpaceScene />
+
+                        <FloatingIsland
                             position={[0, -2, 0]}
                             scale={[0.5, 0.5, 0.5]}
                             onPortalClick={handlePortalClick}
-                            onLoad={() => setIsIslandLoaded(true)}
+                            onLoad={() => console.log('Island loaded')}
                         />
+
+                        <ambientLight intensity={0.5} />
+                        <pointLight
+                            position={[10, 10, 10]}
+                            intensity={1}
+                            castShadow
+                        />
+                        <hemisphereLight
+                            intensity={0.3}
+                            color="#ffffff"
+                            groundColor="#000000"
+                        />
+
+                        <PerspectiveCamera
+                            makeDefault
+                            position={[0, 8, 15]}
+                            near={0.1}
+                            far={100}
+                        />
+
+                        {cameraMode === 'free' ? (
+                            <OrbitControls
+                                enableDamping
+                                dampingFactor={0.05}
+                                minDistance={8}
+                                maxDistance={25}
+                                maxPolarAngle={Math.PI / 2 - 0.1}
+                            />
+                        ) : (
+                            <AutoTrackingSystem />
+                        )}
                     </Suspense>
-
-                    <ambientLight intensity={1.5} color="#ffffff" />
-                    <pointLight position={[0, 15, 5]} intensity={1.0} color="#ffffff" castShadow shadow-mapSize={[4096, 4096]} />
-                    <hemisphereLight intensity={0.2} color="#445588" groundColor="#443300" />
-
-                    <PerspectiveCamera makeDefault position={[0, 8, 15]} near={0.1} far={100} />
-
-                    {cameraMode === 'free' ? (
-                        <OrbitControls enableDamping dampingFactor={0.05} minDistance={8} maxDistance={25} maxPolarAngle={Math.PI / 2 - 0.1} />
-                    ) : (
-                        <AutoTrackingSystem />
-                    )}
                 </Canvas>
             )}
 
@@ -123,16 +145,4 @@ function AutoTrackingSystem() {
     }, []);
 
     return null;
-}
-
-function Loader() {
-    const { progress } = useProgress();
-    return (
-        <Html center>
-            <div className="loading-bar">
-                <div style={{ width: `${progress}%` }} />
-                <p>{Math.round(progress)}% loaded</p>
-            </div>
-        </Html>
-    );
 }

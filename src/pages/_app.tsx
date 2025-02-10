@@ -2,41 +2,8 @@ import type { AppProps } from 'next/app';
 import '../styles/globals.css';
 import { useRouter } from 'next/router';
 import { AnimatePresence } from 'framer-motion';
-import { useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
-import { useGLTF } from '@react-three/drei';
-
-// Central place to manage model paths
-export const MODELS = {
-    FLOATING_ISLAND: '/models/float.glb',
-    ROOM: '/models/room-optimized.glb'
-} as const;
-
-function ModelPreloader() {
-    useEffect(() => {
-        const preloadModels = async () => {
-            try {
-                // Preload models
-                await Promise.all([
-                    useGLTF.preload(MODELS.FLOATING_ISLAND),
-                    useGLTF.preload(MODELS.ROOM)
-                ]);
-            } catch (error) {
-                console.error('Model preloading failed:', error);
-            }
-        };
-
-        preloadModels();
-
-        // Cleanup
-        return () => {
-            useGLTF.clear;
-        };
-    }, []);
-
-    return null;
-}
 
 function MyApp({ Component, pageProps }: AppProps) {
     const router = useRouter();
@@ -58,7 +25,6 @@ function MyApp({ Component, pageProps }: AppProps) {
                 </div>
             )}
         >
-            <ModelPreloader />
             <AnimatePresence mode="wait" onExitComplete={() => window.scrollTo(0, 0)}>
                 <Component {...pageProps} key={router.asPath} />
             </AnimatePresence>

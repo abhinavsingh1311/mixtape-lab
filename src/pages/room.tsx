@@ -1,100 +1,77 @@
-import { Canvas, useFrame } from '@react-three/fiber';
-import { PerspectiveCamera, OrbitControls, Environment, Html, useProgress } from '@react-three/drei';
-import { Suspense, useEffect, useRef, useState } from 'react';
+import { Canvas } from '@react-three/fiber';
+import { PerspectiveCamera, OrbitControls } from '@react-three/drei';
+import { Suspense, useState } from 'react';
 import * as THREE from 'three';
-import Room from '@/components/three/Room';
+import ModernRoom from '@/components/three/Room';
 import DesktopOverlay from '@/components/ui/DesktopOverlay';
 import type { ThreeEvent } from '@react-three/fiber';
-import Loader from '@/components/ui/Loader';
+import { EffectComposer, Bloom, ChromaticAberration } from '@react-three/postprocessing';
+import { ClosedSpaceScene } from '@/components/three/ClosedSpaceScene';
+
 export default function RoomScene() {
     const [isRoomLoaded, setIsRoomLoaded] = useState(false);
-    const [cameraMode, setCameraMode] = useState<'free' | 'locked'>('free');
     const [isDesktopOpen, setIsDesktopOpen] = useState(false);
-    const controls = useRef<any>(null);
-    const [zoomTarget, setZoomTarget] = useState<THREE.Vector3 | null>(null);
-
-    const handleObjectClick = (event: ThreeEvent<MouseEvent>) => {
-        if (cameraMode === 'locked') {
-            const box = new THREE.Box3().setFromObject(event.object);
-            const center = box.getCenter(new THREE.Vector3());
-            setZoomTarget(center);
-        }
-    };
-
-    const handleDesktopClick = () => {
-        setIsDesktopOpen(true);
-        setCameraMode('locked');
-    };
 
     return (
-        <div className="h-screen w-screen relative">
-            {/* UI Elements */}
-            <div className="fixed top-4 right-4 z-50">
-                <button
-                    className="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700"
-                    onClick={() => setCameraMode((prev) => (prev === 'free' ? 'locked' : 'free'))}
-                >
-                    {cameraMode === 'free' ? '🔒 Lock Camera' : '🔓 Free Camera'}
-                </button>
-            </div>
-
+        <div className="h-screen w-screen relative bg-black">
             {!isRoomLoaded && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black/80 z-50">
-                    <p className="text-white text-3xl animate-pulse">Loading virtual space...</p>
+                    <p className="text-white text-3xl animate-pulse">Loading space...</p>
                 </div>
             )}
 
             <DesktopOverlay
                 isOpen={isDesktopOpen}
-                onClose={() => {
-                    setIsDesktopOpen(false);
-                    setCameraMode('free');
-                }}
+                onClose={() => setIsDesktopOpen(false)}
             />
 
-            {/* Canvas */}
-            <Canvas shadows camera={{ position: [0, 2, 8], fov: 50 }}>
-                <CameraController cameraMode={cameraMode} zoomTarget={zoomTarget} />
+            <Canvas
+                shadows
+                camera={{ position: [10, 10, 10], fov: 50 }}
+                gl={{
+                    antialias: true,
+                    toneMapping: THREE.ACESFilmicToneMapping,
+                    toneMappingExposure: 1.5,
+                    outputEncoding: THREE.sRGBEncoding
+                }}
+            >
+                <color attach="background" args={['#000000']} />
 
-                <ambientLight intensity={1.5} />
-                <pointLight position={[5, 5, 5]} intensity={1.0} castShadow />
+                <Suspense fallback={null}>
+                    <EffectComposer>
+                        <Bloom
+                            intensity={1.5}
+                            luminanceThreshold={0.2}
+                            luminanceSmoothing={0.9}
+                            height={300}
+                        />
+                        <ChromaticAberration offset={[0.0005, 0.0005]} />
+                    </EffectComposer>
 
-                <OrbitControls
-                    ref={controls}
-                    enabled={cameraMode === 'free'}
-                    enableDamping
-                    dampingFactor={0.05}
-                    minDistance={3}
-                    maxDistance={15}
-                    maxPolarAngle={Math.PI / 2}
-                />
+                    <ClosedSpaceScene />
 
-                <Environment files="/images/moonless_golf_4k.hdr" background backgroundBlurriness={0.5} />
-
-                <Suspense fallback={<Loader />}>
-                    <Room
-                        position={[0, -4, -5]}
+                    <ModernRoom
+                        position={[0, -2, 0]}
                         scale={[1, 1, 1]}
-                        rotation={[0.2, Math.PI / -2, 0.1]}
-                        onLoad={() => {
-                            setIsRoomLoaded(true);
-                            controls.current?.reset();
+                        onLoad={() => setIsRoomLoaded(true)}
+                        onClick={(e: ThreeEvent<MouseEvent>) => {
+                            e.stopPropagation();
                         }}
-                        onClick={handleObjectClick}
-                        onDesktopClick={handleDesktopClick}
+                        onDesktopClick={() => setIsDesktopOpen(true)}
+                    />
+
+                    <PerspectiveCamera makeDefault position={[10, 10, 10]} />
+
+                    <OrbitControls
+                        enableDamping
+                        dampingFactor={0.05}
+                        minDistance={5}
+                        maxDistance={20}
+                        maxPolarAngle={Math.PI / 2}
+                        target={[0, 0, 0]}
                     />
                 </Suspense>
             </Canvas>
         </div>
     );
-}
-
-function CameraController({ cameraMode, zoomTarget }: { cameraMode: 'free' | 'locked'; zoomTarget: THREE.Vector3 | null }) {
-    useFrame((state, delta) => {
-        if (cameraMode === 'locked' && zoomTarget) {
-            state.camera.position.lerp(zoomTarget.clone().add(new THREE.Vector3(0, 1, 3)), delta * 2);
-            state.camera.lookAt(zoomTarget);
-        }
-    });
-    return null;
 }
