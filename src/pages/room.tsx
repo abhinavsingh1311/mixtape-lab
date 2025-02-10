@@ -7,6 +7,8 @@ import DesktopOverlay from '@/components/ui/DesktopOverlay';
 import type { ThreeEvent } from '@react-three/fiber';
 import { EffectComposer, Bloom, ChromaticAberration } from '@react-three/postprocessing';
 import { ClosedSpaceScene } from '@/components/three/ClosedSpaceScene';
+import { Vector2 } from 'three';
+
 
 export default function RoomScene() {
     const [isRoomLoaded, setIsRoomLoaded] = useState(false);
@@ -26,15 +28,15 @@ export default function RoomScene() {
             />
 
             <Canvas
-                shadows
-                camera={{ position: [10, 10, 10], fov: 50 }}
-                gl={{
-                    antialias: true,
-                    toneMapping: THREE.ACESFilmicToneMapping,
-                    toneMappingExposure: 1.5,
-                    outputEncoding: THREE.sRGBEncoding
+                gl={(canvas) => {
+                    const renderer = new THREE.WebGLRenderer({ canvas });
+                    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+                    renderer.toneMappingExposure = 1.5;
+                    renderer.outputColorSpace = THREE.SRGBColorSpace; // Correct replacement
+                    return renderer;
                 }}
             >
+
                 <color attach="background" args={['#000000']} />
 
                 <Suspense fallback={null}>
@@ -45,7 +47,9 @@ export default function RoomScene() {
                             luminanceSmoothing={0.9}
                             height={300}
                         />
-                        <ChromaticAberration offset={[0.0005, 0.0005]} />
+
+                        <ChromaticAberration offset={new Vector2(0.0005, 0.0005)} radialModulation={false} modulationOffset={0} />
+
                     </EffectComposer>
 
                     <ClosedSpaceScene />
