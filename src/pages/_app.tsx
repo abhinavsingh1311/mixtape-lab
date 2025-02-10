@@ -9,8 +9,8 @@ import { useGLTF } from '@react-three/drei';
 
 // Central place to manage model paths
 export const MODELS = {
-    FLOATING_ISLAND: '/models/f.glb',
-    ROOM: '/models/r.glb'
+    FLOATING_ISLAND: '/models/float-optimized.glb',
+    ROOM: '/models/room-optimized.glb'
 } as const;
 
 function ModelPreloader() {

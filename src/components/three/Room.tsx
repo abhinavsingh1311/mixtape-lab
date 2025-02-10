@@ -4,7 +4,7 @@ import { GroupProps, ThreeEvent } from '@react-three/fiber';
 import { useEffect, useState } from 'react';
 import * as THREE from 'three';
 
-const MODEL_PATH = '/models/r.glb';
+const MODEL_PATH = '/models/room-optimized.glb';
 
 interface RoomProps extends GroupProps {
     onLoad: () => void;
