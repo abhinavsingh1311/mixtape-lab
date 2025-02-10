@@ -2,9 +2,10 @@ import { useGLTF } from '@react-three/drei';
 import { GroupProps, ThreeEvent } from '@react-three/fiber';
 import { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
-import { useFrame } from '@react-three/fiber';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 
-const MODEL_PATH = '/models/f.glb';
+const MODEL_PATH = '/models/float-optimized.glb';
 
 export default function FloatingIsland({
     onPortalClick,
@@ -12,90 +13,71 @@ export default function FloatingIsland({
     ...props
 }: GroupProps & { onPortalClick: () => void; onLoad: () => void }) {
     const groupRef = useRef<THREE.Group>(null);
-    const glowRef = useRef<THREE.Mesh>();
-    const [modelError, setModelError] = useState<Error | null>(null);
-
-    // Proper error handling with type-safe callback
-    const { scene } = useGLTF(MODEL_PATH, undefined, undefined, (error) => {
-        const message = error instanceof Error ? error.message : 'Model load failed';
-        const err = new Error(message);
-        console.error('Model load error:', err);
-        setModelError(err);
-    });
+    const [scene, setScene] = useState<THREE.Group | null>(null);
+    const [error, setError] = useState<Error | null>(null);
 
     useEffect(() => {
-        if (!scene || modelError) return;
+        const loader = new GLTFLoader();
+        const dracoLoader = new DRACOLoader();
+        dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
+        loader.setDRACOLoader(dracoLoader);
 
-        try {
-            scene.traverse((child) => {
-                if (child instanceof THREE.Mesh) {
-                    // Type-safe material cloning
-                    if (Array.isArray(child.material)) {
-                        child.material = child.material.map(mat => mat.clone());
-                    } else {
-                        child.material = child.material.clone();
+        const loadModel = async () => {
+            try {
+                const gltf = await loader.loadAsync(MODEL_PATH);
+
+                // Handle materials and shadows
+                const materials = new Set<THREE.Material>();
+                gltf.scene.traverse((child) => {
+                    if (child instanceof THREE.Mesh) {
+                        // Enable shadows
+                        child.castShadow = true;
+                        child.receiveShadow = true;
+
+                        // Track materials for cleanup
+                        if (Array.isArray(child.material)) {
+                            child.material.forEach(m => materials.add(m.clone()));
+                        } else {
+                            materials.add(child.material.clone());
+                        }
                     }
-                    child.castShadow = true;
-                    child.receiveShadow = true;
-                }
-            });
+                });
 
-            // Glow effect setup
-            const geometry = new THREE.SphereGeometry(3.5, 32, 32);
-            const material = new THREE.MeshStandardMaterial({
-                color: 0x00ffff,
-                emissive: 0x90EE90,
-                emissiveIntensity: 1.0,
-                transparent: true,
-                opacity: 0.15,
-                side: THREE.DoubleSide,
-            });
+                setScene(gltf.scene);
+                onLoad();
 
-            glowRef.current = new THREE.Mesh(geometry, material);
-            glowRef.current.position.set(0, 2.3, 0);
-            groupRef.current?.add(glowRef.current);
-            onLoad();
-
-        } catch (error) {
-            const err = error instanceof Error ? error : new Error('Unknown error');
-            setModelError(err);
-        }
-
-        return () => {
-            // Proper resource disposal with type assertions
-            scene.traverse(child => {
-                if (child instanceof THREE.Mesh) {
-                    child.geometry.dispose();
-                    if (Array.isArray(child.material)) {
-                        child.material.forEach(mat => mat.dispose());
-                    } else {
-                        child.material.dispose();
-                    }
-                }
-            });
-
-            if (glowRef.current) {
-                glowRef.current.geometry.dispose();
-                if ('dispose' in glowRef.current.material)
-                    glowRef.current.material.dispose();
+                // Cleanup function
+                return () => {
+                    materials.forEach(m => m.dispose());
+                    gltf.scene.traverse(child => {
+                        if (child instanceof THREE.Mesh) {
+                            child.geometry.dispose();
+                        }
+                    });
+                };
+            } catch (err) {
+                console.error('Model load failed:', err);
+                setError(err instanceof Error ? err : new Error('Failed to load 3D model'));
             }
         };
-    }, [scene, onLoad, modelError]);
 
-    useFrame(({ clock }) => {
-        if (modelError || !groupRef.current) return;
+        loadModel();
+    }, [onLoad]);
 
-        if (glowRef.current) {
-            const pulse = Math.sin(clock.elapsedTime * 1.5) * 0.03;
-            glowRef.current.scale.setScalar(1.0 + pulse);
-            glowRef.current.rotation.y = clock.elapsedTime * 0.15;
-        }
+    useEffect(() => {
+        if (!scene) return;
 
-        groupRef.current.position.y = Math.sin(clock.elapsedTime * 0.6) * 0.2;
-        groupRef.current.rotation.y = clock.elapsedTime * 0.03;
-    });
+        const interval = setInterval(() => {
+            if (groupRef.current) {
+                groupRef.current.rotation.y += 0.005;
+                groupRef.current.position.y = Math.sin(Date.now() * 0.001) * 0.2;
+            }
+        }, 1000 / 60);
 
-    if (modelError) {
+        return () => clearInterval(interval);
+    }, [scene]);
+
+    if (error) {
         return (
             <mesh position={[0, -2, 0]} scale={[2, 0.5, 2]}>
                 <boxGeometry />
@@ -104,7 +86,7 @@ export default function FloatingIsland({
         );
     }
 
-    return (
+    return scene ? (
         <group ref={groupRef} {...props}>
             <primitive
                 object={scene}
@@ -114,5 +96,5 @@ export default function FloatingIsland({
                 }}
             />
         </group>
-    );
+    ) : null;
 }
