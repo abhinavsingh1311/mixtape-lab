@@ -6,8 +6,8 @@ import { GLTF } from 'three-stdlib';
 import { GroupProps } from '@react-three/fiber';
 
 // Pre-load models
-useGLTF.preload('@/models/f.glb');
-useGLTF.preload('@/models/r.glb');
+useGLTF.preload('@/models/float.glb');
+useGLTF.preload('@/models/room-optimized.glb');
 
 interface ModelLoaderProps extends GroupProps {
     modelPath: string;

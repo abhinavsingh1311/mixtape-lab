@@ -5,7 +5,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 
-const MODEL_PATH = '/models/float-optimized.glb';
+const MODEL_PATH = '/models/float.glb';
 
 export default function FloatingIsland({
     onPortalClick,

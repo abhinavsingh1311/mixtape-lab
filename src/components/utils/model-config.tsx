@@ -12,6 +12,6 @@ export const configureModel = () => {
 };
 
 export const MODELS = {
-    FLOATING_ISLAND: '/models/f.glb',
-    ROOM: '/models/r.glb'
+    FLOATING_ISLAND: '/models/float.glb',
+    ROOM: '/models/room-optimized.glb'
 } as const;
