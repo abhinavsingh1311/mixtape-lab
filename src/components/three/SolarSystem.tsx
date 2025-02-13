@@ -1,42 +1,47 @@
 // src/components/three/SolarSystem.tsx
-import { useRef, useMemo, useState } from 'react';
-import { useFrame, useLoader } from '@react-three/fiber';
-import { Object3D, Mesh, Group, Vector3, DoubleSide, TextureLoader } from 'three';
+import { useRef, useMemo, useState, useEffect } from 'react';
+import { useFrame, useThree } from '@react-three/fiber';
+import { Object3D, Mesh, Group, Vector3, DoubleSide, RingGeometry } from 'three';
 import { useRouter } from 'next/router';
-import { Text } from '@react-three/drei';
+import { Text, useTexture } from '@react-three/drei';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import * as THREE from 'three';
 
 interface PlanetSystemProps {
     size: number;
     distance: number;
-    color: string;
     speed: number;
     name: string;
     link: string;
-    description: string;
     texture: string;
+    normalMap?: string;
+    roughnessMap?: string;
+    description?: string;
 }
 
 class PlanetSystem {
     size: number;
     distance: number;
-    color: string;
     speed: number;
     angle: number;
     name: string;
     link: string;
-    description: string;
     texture: string;
+    normalMap?: string;
+    roughnessMap?: string;
+    description: string;
 
-    constructor({ size, distance, color, speed, name, link, description, texture }: PlanetSystemProps) {
+    constructor({ size, distance, speed, name, link, texture, normalMap, roughnessMap, description = '' }: PlanetSystemProps) {
         this.size = size;
         this.distance = distance;
-        this.color = color;
         this.speed = speed;
         this.angle = Math.random() * Math.PI * 2;
         this.name = name;
         this.link = link;
-        this.description = description;
         this.texture = texture;
+        this.normalMap = normalMap;
+        this.roughnessMap = roughnessMap;
+        this.description = description;
     }
 
     update(): { x: number; z: number } {
@@ -48,17 +53,46 @@ class PlanetSystem {
     }
 }
 
+const PlanetGlow: React.FC<{ radius: number }> = ({ radius }) => (
+    <mesh scale={[1.2, 1.2, 1.2]}>
+        <sphereGeometry args={[radius, 32, 32]} />
+        <meshStandardMaterial
+            color="#ffffff"
+            transparent
+            opacity={0.3}
+            emissive="#ffffff"
+            emissiveIntensity={0.5}
+            blending={THREE.AdditiveBlending}
+            side={DoubleSide}
+        />
+    </mesh>
+);
+
+const OrbitLine: React.FC<{ radius: number }> = ({ radius }) => (
+    <mesh rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[radius - 0.1, radius + 0.1, 64]} />
+        <meshStandardMaterial
+            color="#4a4a4a"
+            transparent
+            opacity={0.2}
+            side={DoubleSide}
+        />
+    </mesh>
+);
+
 interface PlanetProps {
     planet: PlanetSystem;
-    onClick: (route: string) => void;
+    onClick: (route: string, position: Vector3) => void;
 }
 
 const Planet: React.FC<PlanetProps> = ({ planet, onClick }) => {
     const meshRef = useRef<Mesh>(null);
-    const textRef = useRef<any>(null);
     const [hovered, setHovered] = useState(false);
-
-    const texture = useLoader(TextureLoader, planet.texture);
+    const [texture, normalMap, roughnessMap] = useTexture([
+        planet.texture,
+        planet.normalMap || '/images/textures/2k_moon_normal.jpg',
+        planet.roughnessMap || '/images/textures/2k_moon_normal.jpg'
+    ]);
 
     useFrame(() => {
         const pos = planet.update();
@@ -67,195 +101,163 @@ const Planet: React.FC<PlanetProps> = ({ planet, onClick }) => {
             meshRef.current.position.z = pos.z;
             meshRef.current.rotation.y += 0.005;
         }
-        if (textRef.current) {
-            textRef.current.position.x = pos.x;
-            textRef.current.position.z = pos.z;
-            textRef.current.position.y = planet.size + 2;
-            const parentRotation = meshRef.current?.parent instanceof Object3D
-                ? meshRef.current.parent.rotation.y
-                : 0;
-            textRef.current.rotation.y = -parentRotation;
-        }
     });
 
     return (
         <group>
+            <OrbitLine radius={planet.distance} />
+
             <mesh
                 ref={meshRef}
-                onClick={() => onClick(planet.link)}
-                onPointerOver={() => setHovered(true)}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    onClick(planet.link, meshRef.current!.position);
+                }}
+                onPointerOver={(e) => {
+                    e.stopPropagation();
+                    setHovered(true);
+                }}
                 onPointerOut={() => setHovered(false)}
             >
                 <sphereGeometry args={[planet.size, 64, 64]} />
                 <meshStandardMaterial
                     map={texture}
-                    metalness={0.2}
-                    roughness={0.8}
-                    emissive={hovered ? planet.color : '#000000'}
-                    emissiveIntensity={hovered ? 0.5 : 0.2}
+                    normalMap={normalMap}
+                    roughnessMap={roughnessMap}
+                    metalness={0.4}
+                    roughness={0.7}
+                    emissive={hovered ? '#ffffff' : '#000000'}
+                    emissiveIntensity={hovered ? 0.5 : 0.1}
                 />
             </mesh>
+
             {hovered && (
-                <Text
-                    ref={textRef}
-                    color="white"
-                    fontSize={1.5}
-                    maxWidth={200}
-                    lineHeight={1}
-                    letterSpacing={0.02}
-                    textAlign="center"
-                    anchorX="center"
-                    anchorY="bottom"
-                    outlineWidth={0.2}
-                    outlineColor="#000000"
-                >
-                    {planet.name}
-                </Text>
+                <>
+                    <PlanetGlow radius={planet.size} />
+                    <Text
+                        position={[meshRef.current!.position.x, planet.size + 3, meshRef.current!.position.z]}
+                        color="white"
+                        fontSize={1.5}
+                        anchorX="center"
+                        anchorY="bottom"
+                        outlineWidth={0.2}
+                        outlineColor="#000000"
+                    >
+                        {planet.name}
+                    </Text>
+                </>
             )}
         </group>
     );
 };
 
-const SunCorona: React.FC = () => {
-    const points = useMemo(() => {
-        const temp = [];
-        for (let i = 0; i < 1000; i++) {
-            const angle = Math.random() * Math.PI * 2;
-            const radius = 8 + Math.random() * 4;
-            temp.push(
-                Math.cos(angle) * radius,
-                (Math.random() - 0.5) * 4,
-                Math.sin(angle) * radius
-            );
-        }
-        return new Float32Array(temp);
-    }, []);
-
-    return (
-        <points>
-            <bufferGeometry>
-                <bufferAttribute
-                    attach="attributes-position"
-                    count={points.length / 3}
-                    array={points}
-                    itemSize={3}
-                />
-            </bufferGeometry>
-            <pointsMaterial
-                size={0.2}
-                color="#FDB813"
-                transparent
-                opacity={0.6}
-                sizeAttenuation
-            />
-        </points>
-    );
-};
-
 const SolarSystem: React.FC = () => {
     const router = useRouter();
-    const systemRef = useRef<Group>(null);
-    const sunRef = useRef<Mesh>(null);
-    const sunTexture = useLoader(TextureLoader, '/textures/2k_sun.jpg');
+    const { camera, controls } = useThree();
+    const [targetPosition, setTargetPosition] = useState<Vector3 | null>(null);
+    const [originalPosition] = useState(() => camera.position.clone());
+    const [originalTarget] = useState(() => (controls as OrbitControls).target.clone());
 
     const planets = useMemo(() => [
         new PlanetSystem({
-            size: 2,
+            size: 1.5,
             distance: 20,
-            color: '#808080',
-            speed: 0.005,
-            name: 'About Me',
-            link: '/about',
-            description: 'Learn about my journey',
-            texture: '/textures/2k_mercury.jpg'
-        }),
-        new PlanetSystem({
-            size: 2.5,
-            distance: 35,
-            color: '#ffd700',
-            speed: 0.004,
-            name: 'Projects',
-            link: '/projects',
-            description: 'Explore my work',
-            texture: '/textures/2k_venus_surface.jpg'
-        }),
-        new PlanetSystem({
-            size: 3,
-            distance: 50,
-            color: '#4B67AD',
-            speed: 0.003,
-            name: 'Skills',
-            link: '/skills',
-            description: 'Technical expertise',
-            texture: '/textures/2k_earth_normal.jpg'
+            speed: 0.02,
+            name: 'Mercury',
+            texture: '/images/textures/2k_mercury.jpg',
+            link: '/mercury'
         }),
         new PlanetSystem({
             size: 2.2,
-            distance: 65,
-            color: '#CF503A',
-            speed: 0.002,
-            name: 'Experience',
-            link: '/experience',
-            description: 'Professional journey',
-            texture: '/textures/2k_mars.jpg'
+            distance: 30,
+            speed: 0.015,
+            name: 'Venus',
+            texture: '/images/textures/2k_venus_surface.jpg',
+            link: '/venus'
+        }),
+        new PlanetSystem({
+            size: 2.5,
+            distance: 45,
+            speed: 0.01,
+            name: 'Earth',
+            texture: '/images/textures/2k_earth_normal.jpg',
+            normalMap: '/images/textures/2k_earth_normal.jpg',
+            roughnessMap: '/images/textures/2k_earth_normal.jpg',
+            link: '/earth'
+        }),
+        new PlanetSystem({
+            size: 2,
+            distance: 60,
+            speed: 0.008,
+            name: 'Mars',
+            texture: '/images/textures/2k_mars.jpg',
+            link: '/mars'
+        }),
+        new PlanetSystem({
+            size: 4.5,
+            distance: 80,
+            speed: 0.005,
+            name: 'Jupiter',
+            texture: '/images/textures/2k_jupiter.jpg',
+            link: '/jupiter'
         }),
         new PlanetSystem({
             size: 4,
-            distance: 85,
-            color: '#C88B3A',
-            speed: 0.0015,
-            name: 'Contact',
-            link: '/contact',
-            description: 'Get in touch',
-            texture: '/textures/2k_jupiter.jpg'
-        }),
-        new PlanetSystem({
-            size: 3.5,
-            distance: 105,
-            color: '#C4A268',
-            speed: 0.001,
-            name: 'Blog',
-            link: '/blog',
-            description: 'Read my thoughts',
-            texture: '/textures/2k_saturn.jpg'
+            distance: 100,
+            speed: 0.003,
+            name: 'Saturn',
+            texture: '/images/textures/2k_saturn.jpg',
+            link: '/saturn'
         }),
     ], []);
 
-    const handlePlanetClick = (route: string) => {
-        router.push(route);
-    };
-
-    useFrame(() => {
-        if (sunRef.current) {
-            sunRef.current.rotation.y += 0.0005;
+    useFrame(({ clock }) => {
+        if (targetPosition) {
+            // Smooth camera transition to target
+            camera.position.lerp(
+                new Vector3(
+                    targetPosition.x * 0.8,
+                    targetPosition.y + 20,
+                    targetPosition.z * 0.8
+                ),
+                0.1
+            );
+            (controls as OrbitControls).target.lerp(targetPosition, 0.1);
+        } else {
+            // Return to original position
+            camera.position.lerp(originalPosition, 0.1);
+            (controls as OrbitControls).target.lerp(originalTarget, 0.1);
         }
     });
 
-    return (
-        <group ref={systemRef}>
-            {/* Sun with Corona */}
-            <group>
-                <mesh ref={sunRef}>
-                    <sphereGeometry args={[8, 64, 64]} />
-                    <meshStandardMaterial
-                        map={sunTexture}
-                        emissive="#FDB813"
-                        emissiveIntensity={2}
-                        metalness={0.1}
-                        roughness={0.6}
-                    />
-                    <pointLight intensity={5} distance={300} decay={1.5} />
-                </mesh>
-                <SunCorona />
-            </group>
+    const handlePlanetClick = (route: string, position: Vector3) => {
+        if (targetPosition?.equals(position)) {
+            // Clicking same planet again resets view
+            setTargetPosition(null);
+        } else {
+            setTargetPosition(new Vector3(position.x, 0, position.z));
+        }
+    };
 
-            {/* Additional Lighting */}
-            <ambientLight intensity={0.5} />
-            <hemisphereLight
-                intensity={0.8}
-                color="#ffffff"
-                groundColor="#ffffff"
-            />
+    return (
+        <group>
+            {/* Sun */}
+            <mesh position={[0, 0, 0]}>
+                <sphereGeometry args={[10, 64, 64]} />
+                <meshStandardMaterial
+                    color="#FDB813"
+                    emissive="#FDB813"
+                    emissiveIntensity={2}
+                    metalness={0.1}
+                    roughness={0.6}
+                />
+                <pointLight
+                    intensity={5}
+                    distance={500}
+                    decay={1.5}
+                    color="#ff6600"
+                />
+            </mesh>
 
             {/* Planets */}
             {planets.map((planet, index) => (
@@ -265,6 +267,9 @@ const SolarSystem: React.FC = () => {
                     onClick={handlePlanetClick}
                 />
             ))}
+
+            <ambientLight intensity={0.5} />
+            <hemisphereLight intensity={0.8} color="#ffffff" groundColor="#404040" />
         </group>
     );
 };
