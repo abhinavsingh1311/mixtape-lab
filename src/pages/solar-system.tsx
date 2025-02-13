@@ -10,6 +10,8 @@ const SolarSystem = dynamic(() => import('@/components/three/SolarSystem'), {
     ssr: false
 });
 
+type CameraMode = 'free' | 'locked';
+
 // Loading component
 function LoadingScreen() {
     return (
@@ -23,9 +25,13 @@ function LoadingScreen() {
         </div>
     );
 }
+interface ControlPanelProps {
+    cameraMode: 'free' | 'locked';
+    setCameraMode: (mode: 'free' | 'locked') => void;
+}
 
 // Control Panel Component
-function ControlPanel({ cameraMode, setCameraMode }) {
+function ControlPanel({ cameraMode, setCameraMode }: ControlPanelProps) {
     return (
         <div className="fixed top-0 left-0 right-0 p-4 flex justify-between items-start z-50">
             <div className="bg-black/50 p-4 rounded-lg text-white">
@@ -55,9 +61,8 @@ function ControlPanel({ cameraMode, setCameraMode }) {
     );
 }
 
-// Main Page Component
 export default function SolarSystemPage() {
-    const [cameraMode, setCameraMode] = useState('free');
+    const [cameraMode, setCameraMode] = useState<CameraMode>('free');
     const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
 
     useEffect(() => {
