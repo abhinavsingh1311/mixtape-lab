@@ -21,10 +21,11 @@ export default function Home() {
         return () => clearInterval(timer);
     }, []);
 
+    // In your handlePortalClick function in index.tsx
     const handlePortalClick = () => {
         setShowPortalMessage(false);
         setIsIslandVisible(false);
-        setTimeout(() => router.push('/room'), 500);
+        setTimeout(() => router.push('/solar-system'), 500);
     };
 
     return (

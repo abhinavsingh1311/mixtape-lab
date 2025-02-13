@@ -73,7 +73,7 @@ export default function ModernRoom({ onLoad, onClick, onDesktopClick, ...props }
                 </group>
 
                 {/* Modern L-shaped Desk (Right wall) */}
-                <group position={[4.5, 0.4, -3]} onClick={onDesktopClick} rotation={[0, -Math.PI / 2, 0]}>
+                <group position={[4.5, 1, 0]} rotation={[0, -Math.PI / 2, 0]}>
                     <mesh castShadow receiveShadow>
                         <boxGeometry args={[5, 0.1, 2.5]} />
                         <meshStandardMaterial color="#ffffff" metalness={0.5} roughness={0.1} />
@@ -87,7 +87,7 @@ export default function ModernRoom({ onLoad, onClick, onDesktopClick, ...props }
                 </group>
 
                 {/* Modern Sofa (Left side facing center) */}
-                <group position={[-4, 0.5, 2]} rotation={[0, Math.PI / 4, 0]}>
+                <group position={[-4.5, 0.5, 0]} rotation={[0, Math.PI / 2, 0]}>
                     <mesh castShadow>
                         <boxGeometry args={[4, 0.6, 1.8]} />
                         <meshStandardMaterial color="#0B2447" metalness={0.2} roughness={0.4} />
@@ -105,7 +105,7 @@ export default function ModernRoom({ onLoad, onClick, onDesktopClick, ...props }
                 </group>
 
                 {/* Coffee Table (Centered in front of sofa) */}
-                <group position={[-1, 0.3, 2.5]}>
+                <group position={[-3, 0.3, 4]}>
                     <mesh castShadow>
                         <cylinderGeometry args={[1, 1, 0.1, 32]} />
                         <meshStandardMaterial color="#ffffff" metalness={0.7} />
@@ -117,7 +117,7 @@ export default function ModernRoom({ onLoad, onClick, onDesktopClick, ...props }
                 </group>
 
                 {/* Desktop Setup (On desk) */}
-                <group position={[4.5, 1.7, -3]}>
+                <group position={[4.5, 1.7, 0]} onClick={onDesktopClick}>
                     <mesh castShadow position={[0, 0.9, 0]} rotation={[0, -Math.PI / 2, 0]}>
                         <boxGeometry args={[1.8, 1, 0.05]} />
                         <meshStandardMaterial color="#2C3333" metalness={0.9} />
@@ -133,7 +133,7 @@ export default function ModernRoom({ onLoad, onClick, onDesktopClick, ...props }
                 </group>
 
                 {/* Plant (Front-right corner) */}
-                <group position={[5, 1.8, 4]}>
+                <group position={[-3, 0.7, 4]}>
                     <mesh castShadow>
                         <cylinderGeometry args={[0.25, 0.2, 0.5, 16]} />
                         <meshStandardMaterial color="#4a4e69" />
@@ -147,7 +147,7 @@ export default function ModernRoom({ onLoad, onClick, onDesktopClick, ...props }
                 </group>
 
                 {/* Decorative Rug (Centered in seating area) */}
-                <mesh receiveShadow position={[-1, 0.01, 2]} rotation-x={-Math.PI / 2}>
+                <mesh receiveShadow position={[-3, 0.01, 4]} rotation-x={-Math.PI / 2}>
                     <circleGeometry args={[2, 32]} />
                     <meshStandardMaterial color="#f4a261" roughness={0.7} />
                 </mesh>
@@ -168,14 +168,14 @@ export default function ModernRoom({ onLoad, onClick, onDesktopClick, ...props }
             <pointLight position={[-5, 5, 3]} intensity={2} color="#ffd6ff" />
             <pointLight position={[5, 5, 4]} intensity={2} color="#c8ffd4" />
             <ambientLight intensity={1.2} color="#ffffff" />
-            <rectAreaLight
+            {/* <rectAreaLight
                 position={[0, 5, -6]}
                 width={12}
                 height={8}
                 intensity={3}
                 color="#ffffff"
                 rotation={[0, 0, 0]}
-            />
+            /> */}
 
             {/* Decorative Text */}
             <Text
