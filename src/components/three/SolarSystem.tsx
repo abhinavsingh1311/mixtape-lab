@@ -153,6 +153,19 @@ const PlanetGlow: React.FC<{ radius: number; color: string }> = ({ radius, color
         />
     </mesh>
 );
+const AtmosphericGlow: React.FC<{ radius: number }> = ({ radius }) => (
+    <mesh scale={[1.1, 1.1, 1.1]}>
+        <sphereGeometry args={[radius, 32, 32]} />
+        <meshStandardMaterial
+            color="#ffffff"
+            transparent
+            opacity={0.2}
+            blending={THREE.AdditiveBlending}
+            side={THREE.BackSide}
+        />
+    </mesh>
+);
+
 
 const AsteroidBelt: React.FC<{ radius: number; width: number; count: number }> = ({ radius, width, count }) => {
     const asteroids = useMemo(() => {
@@ -364,7 +377,7 @@ const Planet: React.FC<PlanetProps> = ({ planet, onClick }) => {
                 )}
 
                 {planet.name === 'Saturn' && <SaturnRings planetSize={planet.size} />}
-
+                {planet.name === 'Earth' && <AtmosphericGlow radius={planet.size} />}
                 {planet.moons?.map((moon, index) => (
                     <Moon
                         key={index}
@@ -422,11 +435,18 @@ const Sun: React.FC = () => {
     );
 };
 
-const SolarSystem: React.FC = () => {
+
+interface SolarSystemProps {
+    cameraMode: 'free' | 'locked';
+    setCameraMode: (mode: 'free' | 'locked') => void;
+}
+
+
+const SolarSystem: React.FC<SolarSystemProps> = ({ cameraMode, setCameraMode }) => {
     const router = useRouter();
     const { camera } = useThree();
     const [targetPosition, setTargetPosition] = useState<Vector3 | null>(null);
-    const [cameraMode, setCameraMode] = useState<'free' | 'locked'>('free');
+    // const [cameraMode, setCameraMode] = useState<'free' | 'locked'>('free');
     const originalPosition = useMemo(() => camera.position.clone(), [camera]);
 
     const planets = useMemo(() => [
@@ -494,7 +514,7 @@ const SolarSystem: React.FC = () => {
     ], []);
 
     useFrame(() => {
-        if (targetPosition && cameraMode === 'locked') {
+        if (cameraMode === 'locked' && targetPosition) {
             camera.position.lerp(
                 new Vector3(
                     targetPosition.x * 2.5,
@@ -509,7 +529,7 @@ const SolarSystem: React.FC = () => {
     });
 
     const handlePlanetClick = (route: string, position: Vector3) => {
-        if (cameraMode === 'locked' && targetPosition?.equals(position)) {
+        if (cameraMode === 'locked') {
             setCameraMode('free');
             setTargetPosition(null);
         } else {

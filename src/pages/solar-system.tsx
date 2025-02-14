@@ -6,6 +6,9 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import ErrorBoundary from '@/components/ErrorBoundary';
 
+// Define CameraMode type
+type CameraMode = 'free' | 'locked';
+
 // Dynamically import the SolarSystem component
 const SolarSystem = dynamic(() => import('@/components/three/SolarSystem'), {
     ssr: false
@@ -26,6 +29,7 @@ function LoadingScreen() {
 
 export default function SolarSystemPage() {
     const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
+    const [cameraMode, setCameraMode] = useState<CameraMode>('free');
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -37,7 +41,13 @@ export default function SolarSystemPage() {
     return (
         <ErrorBoundary>
             <div className="h-screen w-screen relative bg-black">
-                <div className="fixed top-4 right-4 z-50">
+                <div className="fixed top-4 right-4 z-50 flex gap-4">
+                    <button
+                        className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors"
+                        onClick={() => setCameraMode((prev: CameraMode) => (prev === 'free' ? 'locked' : 'free'))}
+                    >
+                        {cameraMode === 'free' ? '🔒 Lock Camera' : '🔓 Free Camera'}
+                    </button>
                     <Link
                         href="/"
                         className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors"
@@ -63,14 +73,12 @@ export default function SolarSystemPage() {
 
                 <div className="absolute inset-0">
                     <Canvas
-                        dpr={[1, 2]}
                         camera={{
-                            position: [0, 100, 300], // Increased Z value from 200 to 300
-                            fov: 50,
+                            position: [0, 150, 400],  // Increased initial distance
+                            fov: 45,
                             near: 0.1,
-                            far: 1500 // Increased far plane from 1000 to 1500
+                            far: 2000  // Increased far plane
                         }}
-
                     >
                         <Suspense fallback={null}>
                             <Stars
@@ -82,7 +90,7 @@ export default function SolarSystemPage() {
                                 fade
                                 speed={1}
                             />
-                            <SolarSystem />
+                            <SolarSystem cameraMode={cameraMode} setCameraMode={setCameraMode} />
                             <OrbitControls
                                 enablePan={true}
                                 enableZoom={true}
