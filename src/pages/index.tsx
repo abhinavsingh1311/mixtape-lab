@@ -112,7 +112,7 @@ export default function Home() {
 
             {showPortalMessage && (
                 <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 text-white text-center text-lg bg-black/50 p-4 rounded-lg backdrop-blur-sm z-50">
-                    Click on the portal to enter my room
+                    Click on the portal to enter!!
                 </div>
             )}
         </div>
