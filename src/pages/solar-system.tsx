@@ -65,11 +65,12 @@ export default function SolarSystemPage() {
                     <Canvas
                         dpr={[1, 2]}
                         camera={{
-                            position: [0, 50, 150],
-                            fov: 75,
+                            position: [0, 100, 300], // Increased Z value from 200 to 300
+                            fov: 50,
                             near: 0.1,
-                            far: 1000
+                            far: 1500 // Increased far plane from 1000 to 1500
                         }}
+
                     >
                         <Suspense fallback={null}>
                             <Stars
@@ -86,7 +87,7 @@ export default function SolarSystemPage() {
                                 enablePan={true}
                                 enableZoom={true}
                                 minDistance={30}
-                                maxDistance={400}
+                                maxDistance={1000}
                                 minPolarAngle={0}
                                 maxPolarAngle={Math.PI}
                                 dampingFactor={0.05}

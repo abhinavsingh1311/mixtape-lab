@@ -139,6 +139,146 @@ interface PlanetProps {
     onClick: (route: string, position: Vector3) => void;
 }
 
+const PlanetGlow: React.FC<{ radius: number; color: string }> = ({ radius, color }) => (
+    <mesh scale={[1.2, 1.2, 1.2]}>
+        <sphereGeometry args={[radius, 32, 32]} />
+        <meshStandardMaterial
+            color={color}
+            transparent
+            opacity={0.3}
+            emissive={color}
+            emissiveIntensity={0.5}
+            blending={THREE.AdditiveBlending}
+            side={THREE.DoubleSide}
+        />
+    </mesh>
+);
+
+const AsteroidBelt: React.FC<{ radius: number; width: number; count: number }> = ({ radius, width, count }) => {
+    const asteroids = useMemo(() => {
+        const temp = [];
+        for (let i = 0; i < count; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const distance = radius + (Math.random() - 0.5) * width;
+            temp.push({
+                position: [
+                    Math.cos(angle) * distance,
+                    (Math.random() - 0.5) * 2,
+                    Math.sin(angle) * distance
+                ],
+                scale: Math.random() * 0.1 + 0.05
+            });
+        }
+        return temp;
+    }, [radius, width, count]);
+
+    return (
+        <group>
+            {asteroids.map((asteroid, i) => (
+                <mesh key={i} position={asteroid.position as any}>
+                    <sphereGeometry args={[asteroid.scale, 8, 8]} />
+                    <meshStandardMaterial color="#888888" roughness={0.8} />
+                </mesh>
+            ))}
+        </group>
+    );
+};
+
+const SaturnRings: React.FC<{ planetSize: number }> = ({ planetSize }) => {
+    const [ringColorMap, ringAlphaMap] = useTexture([
+        '/textures/saturn/saturn_rings.jpg', // Color map
+        '/textures/saturn/saturnringpattern.gif' // Transparency map
+    ]);
+
+
+    return (
+        <mesh rotation={[-Math.PI / 2, 0, 0]}>
+            <ringGeometry args={[planetSize * 1.5, planetSize * 2.5, 64]} />
+            <meshStandardMaterial
+                map={ringColorMap}
+                alphaMap={ringAlphaMap}
+                transparent
+                side={THREE.DoubleSide}
+                opacity={0.85}
+                depthWrite={false}
+            />
+        </mesh>
+    );
+};
+
+const Comet: React.FC = () => {
+    const cometRef = useRef<THREE.Mesh>(null);
+    const trailRef = useRef<THREE.Line>();
+    const [trailPoints] = useState(() => new Float32Array(100 * 3));
+    const [position] = useState(new Vector3());
+    const [angle, setAngle] = useState(0);
+
+    // Initialize trail geometry
+    const trailGeometry = useMemo(() => {
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute('position', new THREE.BufferAttribute(trailPoints, 3));
+        return geometry;
+    }, [trailPoints]);
+
+    useFrame((state) => {
+        const time = state.clock.getElapsedTime();
+        const speed = 0.3;
+
+        // Update comet position on elliptical path
+        setAngle(prev => prev + speed * 0.01);
+        position.set(
+            Math.cos(angle) * 250,
+            Math.sin(angle * 2) * 50,
+            Math.sin(angle) * 250
+        );
+
+        // Update comet mesh
+        if (cometRef.current) {
+            cometRef.current.position.copy(position);
+            cometRef.current.rotation.y += 0.05;
+        }
+
+        // Update trail positions
+        const positions = trailGeometry.attributes.position.array as Float32Array;
+        for (let i = positions.length - 3; i >= 3; i -= 3) {
+            positions[i] = positions[i - 3];
+            positions[i + 1] = positions[i - 2];
+            positions[i + 2] = positions[i - 1];
+        }
+        positions[0] = position.x;
+        positions[1] = position.y;
+        positions[2] = position.z;
+        trailGeometry.attributes.position.needsUpdate = true;
+    });
+
+    return (
+        <group>
+            {/* Comet Head */}
+            <mesh ref={cometRef}>
+                <sphereGeometry args={[1.2, 16, 16]} />
+                <meshStandardMaterial
+                    color="#aaddff"
+                    emissive="#44aaff"
+                    emissiveIntensity={2}
+                    transparent
+                    opacity={0.8}
+                />
+            </mesh>
+
+            {/* Comet Tail */}
+            <line ref={trailRef as any}>
+                <primitive object={trailGeometry} />
+                <lineBasicMaterial
+                    color="#44aaff"
+                    transparent
+                    opacity={0.2}
+                    linewidth={2}
+                />
+            </line>
+        </group>
+    );
+};
+
 const Planet: React.FC<PlanetProps> = ({ planet, onClick }) => {
     const meshRef = useRef<THREE.Mesh>(null);
     const [hovered, setHovered] = useState(false);
@@ -149,7 +289,6 @@ const Planet: React.FC<PlanetProps> = ({ planet, onClick }) => {
 
     useEffect(() => {
         const loader = new THREE.TextureLoader();
-
         loader.load(`/textures/${planet.name.toLowerCase()}/${planet.texture}`,
             (map) => {
                 map.colorSpace = THREE.SRGBColorSpace;
@@ -211,15 +350,20 @@ const Planet: React.FC<PlanetProps> = ({ planet, onClick }) => {
                 />
 
                 {hovered && (
-                    <Html position={[0, planet.size + 3, 0]}>
-                        <div className="bg-black/75 text-white px-3 py-1 rounded text-sm whitespace-nowrap">
-                            {planet.name}
-                            {planet.description && (
-                                <div className="text-xs opacity-75">{planet.description}</div>
-                            )}
-                        </div>
-                    </Html>
+                    <>
+                        <PlanetGlow radius={planet.size} color="#ffffff" />
+                        <Html position={[0, planet.size + 3, 0]}>
+                            <div className="bg-black/75 text-white px-3 py-1 rounded text-sm whitespace-nowrap">
+                                {planet.name}
+                                {planet.description && (
+                                    <div className="text-xs opacity-75">{planet.description}</div>
+                                )}
+                            </div>
+                        </Html>
+                    </>
                 )}
+
+                {planet.name === 'Saturn' && <SaturnRings planetSize={planet.size} />}
 
                 {planet.moons?.map((moon, index) => (
                     <Moon
@@ -282,6 +426,7 @@ const SolarSystem: React.FC = () => {
     const router = useRouter();
     const { camera } = useThree();
     const [targetPosition, setTargetPosition] = useState<Vector3 | null>(null);
+    const [cameraMode, setCameraMode] = useState<'free' | 'locked'>('free');
     const originalPosition = useMemo(() => camera.position.clone(), [camera]);
 
     const planets = useMemo(() => [
@@ -330,7 +475,7 @@ const SolarSystem: React.FC = () => {
         }),
         new PlanetSystem({
             size: 4.5,
-            distance: 80,
+            distance: 120,
             speed: 0.0003,
             name: 'Jupiter',
             texture: '2k_jupiter.jpg',
@@ -339,7 +484,7 @@ const SolarSystem: React.FC = () => {
         }),
         new PlanetSystem({
             size: 4,
-            distance: 100,
+            distance: 200, // Increased distance for Saturn
             speed: 0.0002,
             name: 'Saturn',
             texture: '2k_saturn.jpg',
@@ -349,24 +494,26 @@ const SolarSystem: React.FC = () => {
     ], []);
 
     useFrame(() => {
-        if (targetPosition) {
+        if (targetPosition && cameraMode === 'locked') {
             camera.position.lerp(
                 new Vector3(
-                    targetPosition.x * 1.5,
-                    targetPosition.y + 10,
+                    targetPosition.x * 2.5,
+                    targetPosition.y + 25,
                     targetPosition.z * 1.5
                 ),
                 0.05
             );
-        } else {
+        } else if (cameraMode === 'free') {
             camera.position.lerp(originalPosition, 0.05);
         }
     });
 
     const handlePlanetClick = (route: string, position: Vector3) => {
-        if (targetPosition?.equals(position)) {
+        if (cameraMode === 'locked' && targetPosition?.equals(position)) {
+            setCameraMode('free');
             setTargetPosition(null);
         } else {
+            setCameraMode('locked');
             setTargetPosition(position);
         }
     };
@@ -381,6 +528,9 @@ const SolarSystem: React.FC = () => {
                     onClick={handlePlanetClick}
                 />
             ))}
+
+            <AsteroidBelt radius={70} width={10} count={500} /> {/* Asteroid belt between Mars and Jupiter */}
+            <Comet />
             <ambientLight intensity={0.5} />
             <hemisphereLight intensity={0.8} color="#ffffff" groundColor="#404040" />
         </group>
