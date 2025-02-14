@@ -1,6 +1,6 @@
 // src/components/three/SolarSystem.tsx
 import { useRef, useMemo, useState, useEffect } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
+import {ThreeEvent, useFrame, useThree} from '@react-three/fiber';
 import * as THREE from 'three';
 import { useRouter } from 'next/router';
 import { Html, useTexture, OrbitControls } from '@react-three/drei';
@@ -315,12 +315,21 @@ const Comet: React.FC = () => {
 };
 
 const Planet: React.FC<PlanetProps> = ({ planet, onClick }) => {
+    const router = useRouter();
     const meshRef = useRef<THREE.Mesh>(null);
     const [hovered, setHovered] = useState(false);
     const [textures, setTextures] = useState<{
         map: THREE.Texture;
         bumpMap?: THREE.Texture;
     }>({ map: FALLBACK_TEXTURE });
+
+    const handlePlanetClick = (e: ThreeEvent<MouseEvent>) => {
+        e.stopPropagation();
+        // Navigate to the planet-specific page
+        router.push(`/planets/${planet.name.toLowerCase()}`);
+        // Also call the original onClick for any camera animations
+        onClick(planet.link, new Vector3(meshRef.current!.position.x, 0, meshRef.current!.position.z));
+    };
 
     useEffect(() => {
         const loader = new THREE.TextureLoader();
@@ -366,15 +375,16 @@ const Planet: React.FC<PlanetProps> = ({ planet, onClick }) => {
 
             <mesh
                 ref={meshRef}
-                onClick={(e) => {
-                    e.stopPropagation();
-                    onClick(planet.link, new Vector3(meshRef.current!.position.x, 0, meshRef.current!.position.z));
-                }}
+                onClick={handlePlanetClick}
                 onPointerOver={(e) => {
                     e.stopPropagation();
                     setHovered(true);
+                    document.body.style.cursor = 'pointer';
                 }}
-                onPointerOut={() => setHovered(false)}
+                onPointerOut={() => {
+                    setHovered(false);
+                    document.body.style.cursor = 'default';
+                }}
             >
                 <sphereGeometry args={[planet.size, 64, 64]} />
                 <meshStandardMaterial
@@ -393,6 +403,7 @@ const Planet: React.FC<PlanetProps> = ({ planet, onClick }) => {
                                 {planet.description && (
                                     <div className="text-xs opacity-75">{planet.description}</div>
                                 )}
+                                <div className="text-xs text-blue-300">Click to explore</div>
                             </div>
                         </Html>
                     </>
@@ -411,6 +422,7 @@ const Planet: React.FC<PlanetProps> = ({ planet, onClick }) => {
         </group>
     );
 };
+
 // Enhanced Sun component with volumetric corona and glare effects
 const SunCorona: React.FC = () => {
     const coronaRef = useRef<THREE.Mesh>(null);
