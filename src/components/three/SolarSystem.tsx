@@ -167,35 +167,57 @@ const AtmosphericGlow: React.FC<{ radius: number }> = ({ radius }) => (
 );
 
 
-const AsteroidBelt: React.FC<{ radius: number; width: number; count: number }> = ({ radius, width, count }) => {
+const AsteroidBelt: React.FC = () => {
     const asteroids = useMemo(() => {
+        const innerRadius = 120; // Mars orbit
+        const outerRadius = 140; // Jupiter orbit
+        const count = 1000;
         const temp = [];
+
         for (let i = 0; i < count; i++) {
             const angle = Math.random() * Math.PI * 2;
-            const distance = radius + (Math.random() - 0.5) * width;
+            // Random radius between inner and outer bounds
+            const distance = innerRadius + Math.random() * (outerRadius - innerRadius);
+            // Slightly randomize the vertical position for a more natural look
+            const verticalOffset = (Math.random() - 0.5) * 4;
+
             temp.push({
                 position: [
                     Math.cos(angle) * distance,
-                    (Math.random() - 0.5) * 2,
+                    verticalOffset,
                     Math.sin(angle) * distance
                 ],
-                scale: Math.random() * 0.1 + 0.05
+                rotation: [
+                    Math.random() * Math.PI,
+                    Math.random() * Math.PI,
+                    Math.random() * Math.PI
+                ],
+                scale: Math.random() * 0.3 + 0.1 // Varied sizes between 0.1 and 0.4
             });
         }
         return temp;
-    }, [radius, width, count]);
+    }, []);
 
     return (
         <group>
             {asteroids.map((asteroid, i) => (
-                <mesh key={i} position={asteroid.position as any}>
-                    <sphereGeometry args={[asteroid.scale, 8, 8]} />
-                    <meshStandardMaterial color="#888888" roughness={0.8} />
+                <mesh
+                    key={i}
+                    position={asteroid.position as any}
+                    rotation={asteroid.rotation as any}
+                >
+                    <dodecahedronGeometry args={[asteroid.scale]} />
+                    <meshStandardMaterial
+                        color="#888888"
+                        roughness={0.8}
+                        metalness={0.2}
+                    />
                 </mesh>
             ))}
         </group>
     );
 };
+
 
 const SaturnRings: React.FC<{ planetSize: number }> = ({ planetSize }) => {
     const [ringColorMap, ringAlphaMap] = useTexture([
@@ -208,8 +230,8 @@ const SaturnRings: React.FC<{ planetSize: number }> = ({ planetSize }) => {
         <mesh rotation={[-Math.PI / 2, 0, 0]}>
             <ringGeometry args={[planetSize * 1.5, planetSize * 2.5, 64]} />
             <meshStandardMaterial
-                map={ringColorMap}
-                alphaMap={ringAlphaMap}
+                map={ringAlphaMap}
+                alphaMap={ringColorMap}
                 transparent
                 side={THREE.DoubleSide}
                 opacity={0.85}
@@ -389,14 +411,199 @@ const Planet: React.FC<PlanetProps> = ({ planet, onClick }) => {
         </group>
     );
 };
+// Enhanced Sun component with volumetric corona and glare effects
+const SunCorona: React.FC = () => {
+    const coronaRef = useRef<THREE.Mesh>(null);
+    const glareRef = useRef<THREE.Mesh>(null);
+    const materialRef = useRef<THREE.ShaderMaterial>(null);
 
+    // Custom shader for turbulent corona effect
+    const coronaShader = {
+        uniforms: {
+            time: { value: 0 },
+            color: { value: new THREE.Color("#ff6600") }
+        },
+        vertexShader: `
+            varying vec2 vUv;
+            varying vec3 vNormal;
+            void main() {
+                vUv = uv;
+                vNormal = normalize(normalMatrix * normal);
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `,
+        fragmentShader: `
+            uniform float time;
+            uniform vec3 color;
+            varying vec2 vUv;
+            varying vec3 vNormal;
+
+            // Simplex noise function
+            vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+            vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+            vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
+            vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+
+            float snoise(vec3 v) {
+                const vec2 C = vec2(1.0/6.0, 1.0/3.0);
+                const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
+
+                vec3 i  = floor(v + dot(v, C.yyy));
+                vec3 x0 = v - i + dot(i, C.xxx);
+                vec3 g = step(x0.yzx, x0.xyz);
+                vec3 l = 1.0 - g;
+                vec3 i1 = min( g.xyz, l.zxy );
+                vec3 i2 = max( g.xyz, l.zxy );
+                vec3 x1 = x0 - i1 + C.xxx;
+                vec3 x2 = x0 - i2 + C.yyy;
+                vec3 x3 = x0 - D.yyy;
+
+                i = mod289(i);
+                vec4 p = permute( permute( permute(
+                    i.z + vec4(0.0, i1.z, i2.z, 1.0))
+                    + i.y + vec4(0.0, i1.y, i2.y, 1.0))
+                    + i.x + vec4(0.0, i1.x, i2.x, 1.0));
+
+                float n_ = 0.142857142857;
+                vec3 ns = n_ * D.wyz - D.xzx;
+
+                vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+
+                vec4 x_ = floor(j * ns.z);
+                vec4 y_ = floor(j - 7.0 * x_);
+
+                vec4 x = x_ *ns.x + ns.yyyy;
+                vec4 y = y_ *ns.x + ns.yyyy;
+                vec4 h = 1.0 - abs(x) - abs(y);
+
+                vec4 b0 = vec4( x.xy, y.xy );
+                vec4 b1 = vec4( x.zw, y.zw );
+
+                vec4 s0 = floor(b0)*2.0 + 1.0;
+                vec4 s1 = floor(b1)*2.0 + 1.0;
+                vec4 sh = -step(h, vec4(0.0));
+
+                vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy;
+                vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww;
+
+                vec3 p0 = vec3(a0.xy,h.x);
+                vec3 p1 = vec3(a0.zw,h.y);
+                vec3 p2 = vec3(a1.xy,h.z);
+                vec3 p3 = vec3(a1.zw,h.w);
+
+                vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));
+                p0 *= norm.x;
+                p1 *= norm.y;
+                p2 *= norm.z;
+                p3 *= norm.w;
+
+                vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+                m = m * m;
+                return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
+            }
+
+            void main() {
+                vec3 noise = vec3(
+                    snoise(vec3(vUv * 5.0, time * 0.1)),
+                    snoise(vec3(vUv * 5.0, time * 0.2 + 100.0)),
+                    snoise(vec3(vUv * 5.0, time * 0.3 + 200.0))
+                );
+
+                float fresnel = pow(1.0 - abs(dot(vNormal, vec3(0.0, 0.0, 1.0))), 2.0);
+                float turbulence = abs(noise.x + noise.y + noise.z) * 0.3;
+                
+                vec3 finalColor = mix(color, vec3(1.0, 0.8, 0.4), turbulence);
+                float alpha = fresnel * (0.8 - turbulence * 0.5);
+                
+                gl_FragColor = vec4(finalColor, alpha * 0.6);
+            }
+        `
+    };
+
+    useFrame(({ clock }) => {
+        if (materialRef.current) {
+            materialRef.current.uniforms.time.value = clock.getElapsedTime();
+        }
+    });
+
+    return (
+        <group>
+            {/* Volumetric corona */}
+            <mesh ref={coronaRef} scale={[1.3, 1.3, 1.3]}>
+                <sphereGeometry args={[20, 64, 64]} />
+                <shaderMaterial
+                    ref={materialRef}
+                    args={[coronaShader]}
+                    transparent
+                    depthWrite={false}
+                    side={THREE.BackSide}
+                />
+            </mesh>
+
+            {/* Random glare streaks */}
+            <GlareStreaks />
+        </group>
+    );
+};
+
+// Component for random glare streaks
+const GlareStreaks: React.FC = () => {
+    const streaksRef = useRef<THREE.Group>(null);
+
+    const streaks = useMemo(() => {
+        const streakCount = 8;
+        const streakData = [];
+
+        for (let i = 0; i < streakCount; i++) {
+            const angle = (Math.PI * 2 * i) / streakCount + Math.random() * 0.5;
+            const length = 25 + Math.random() * 15;
+            const width = 0.5 + Math.random() * 1.5;
+
+            streakData.push({ angle, length, width });
+        }
+
+        return streakData;
+    }, []);
+
+    useFrame(({ clock }) => {
+        if (streaksRef.current) {
+            streaksRef.current.rotation.z = clock.getElapsedTime() * 0.05;
+            streaksRef.current.children.forEach((child, i) => {
+                const scale = 1 + Math.sin(clock.getElapsedTime() * 0.5 + i) * 0.2;
+                child.scale.setX(scale);
+            });
+        }
+    });
+
+    return (
+        <group ref={streaksRef}>
+            {streaks.map((streak, i) => (
+                <mesh
+                    key={i}
+                    rotation-z={streak.angle}
+                    position-z={-0.1}
+                >
+                    <planeGeometry args={[streak.length, streak.width]} />
+                    <meshBasicMaterial
+                        color="#ffaa44"
+                        transparent
+                        opacity={0.4}
+                        blending={THREE.AdditiveBlending}
+                    />
+                </mesh>
+            ))}
+        </group>
+    );
+};
+
+// Updated Sun component
 const Sun: React.FC = () => {
     const sunRef = useRef<THREE.Mesh>(null);
     const [sunTexture, setSunTexture] = useState<THREE.Texture>(FALLBACK_TEXTURE);
 
     useEffect(() => {
         new THREE.TextureLoader().load(
-            '/textures/sun/2k_sun.jpg',
+            '/textures/sun/sunmap.jpg',
             (texture) => {
                 texture.colorSpace = THREE.SRGBColorSpace;
                 setSunTexture(texture);
@@ -418,22 +625,21 @@ const Sun: React.FC = () => {
     return (
         <group>
             <mesh ref={sunRef}>
-                <sphereGeometry args={[10, 64, 64]} />
-                <meshBasicMaterial
+                <sphereGeometry args={[20, 64, 64]} />
+                <meshStandardMaterial
                     map={sunTexture}
+                    emissive="#FF4500"
+                    emissiveIntensity={2}
                     color="#FDB813"
                 />
             </mesh>
-
-            <pointLight
-                intensity={5}
-                distance={500}
-                decay={1.5}
-                color="#ff6600"
-            />
+            <SunCorona />
+            <pointLight intensity={8} distance={1000} decay={1.5} color="#ff6600" />
+            <pointLight intensity={4} distance={500} decay={2} color="#ff8833" />
         </group>
     );
 };
+
 
 
 interface SolarSystemProps {
@@ -452,32 +658,32 @@ const SolarSystem: React.FC<SolarSystemProps> = ({ cameraMode, setCameraMode }) 
     const planets = useMemo(() => [
         new PlanetSystem({
             size: 1.5,
-            distance: 20,
+            distance: 40,
             speed: 0.001,
             name: 'Mercury',
             texture: '2k_mercury.jpg',
             bumpMap: 'mercurybump.jpg',
-            link: '/mercury',
+            link: '/planets/mercury',
             description: 'Learn about my journey'
         }),
         new PlanetSystem({
             size: 2.2,
-            distance: 30,
+            distance: 60,
             speed: 0.0008,
             name: 'Venus',
             texture: '2k_venus_surface.jpg',
             bumpMap: 'venusbump.jpg',
-            link: '/venus',
+            link: '/planets/venus',
             description: 'Explore my work'
         }),
         new PlanetSystem({
             size: 2.5,
-            distance: 45,
+            distance: 85,
             speed: 0.0006,
             name: 'Earth',
             texture: 'earthmap1k.jpg',
             bumpMap: 'earthbump1k.jpg',
-            link: '/earth',
+            link: '/planets/earth',
             description: 'Technical expertise',
             moons: [{
                 texture: '2k_moon_normal.jpg'
@@ -485,30 +691,30 @@ const SolarSystem: React.FC<SolarSystemProps> = ({ cameraMode, setCameraMode }) 
         }),
         new PlanetSystem({
             size: 2.2,
-            distance: 60,
+            distance: 105,
             speed: 0.0004,
             name: 'Mars',
             texture: '2k_mars.jpg',
             bumpMap: 'marsbump1k.jpg',
-            link: '/mars',
+            link: '/planets/mars',
             description: 'Professional journey'
         }),
         new PlanetSystem({
             size: 4.5,
-            distance: 120,
+            distance: 200,
             speed: 0.0003,
             name: 'Jupiter',
-            texture: '2k_jupiter.jpg',
-            link: '/jupiter',
+            texture: 'jupitermap.jpg',
+            link: '/planets/jupiter',
             description: 'Contact me'
         }),
         new PlanetSystem({
             size: 4,
-            distance: 200, // Increased distance for Saturn
+            distance: 250, // Increased distance for Saturn
             speed: 0.0002,
             name: 'Saturn',
-            texture: '2k_saturn.jpg',
-            link: '/saturn',
+            texture: 'saturnmap.jpg',
+            link: '/planets/saturn',
             description: 'Read my thoughts'
         })
     ], []);
@@ -549,7 +755,7 @@ const SolarSystem: React.FC<SolarSystemProps> = ({ cameraMode, setCameraMode }) 
                 />
             ))}
 
-            <AsteroidBelt radius={70} width={10} count={500} /> {/* Asteroid belt between Mars and Jupiter */}
+            <AsteroidBelt /> {/* Asteroid belt between Mars and Jupiter */}
             <Comet />
             <ambientLight intensity={0.5} />
             <hemisphereLight intensity={0.8} color="#ffffff" groundColor="#404040" />

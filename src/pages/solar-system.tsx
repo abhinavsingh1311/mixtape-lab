@@ -74,17 +74,17 @@ export default function SolarSystemPage() {
                 <div className="absolute inset-0">
                     <Canvas
                         camera={{
-                            position: [0, 150, 400],  // Increased initial distance
+                            position: [0, 50, 150], // Closer initial position
                             fov: 45,
                             near: 0.1,
-                            far: 2000  // Increased far plane
+                            far: 3000 // Increased for larger zoom out range
                         }}
                     >
                         <Suspense fallback={null}>
                             <Stars
-                                radius={300}
+                                radius={500} // Increased star field
                                 depth={100}
-                                count={7000}
+                                count={10000} // More stars
                                 factor={6}
                                 saturation={0}
                                 fade
@@ -94,13 +94,13 @@ export default function SolarSystemPage() {
                             <OrbitControls
                                 enablePan={true}
                                 enableZoom={true}
-                                minDistance={30}
-                                maxDistance={1000}
-                                minPolarAngle={0}
-                                maxPolarAngle={Math.PI}
+                                minDistance={20} // Closer minimum distance
+                                maxDistance={2000} // Further maximum distance
+                                minPolarAngle={0} // Allow full vertical rotation
+                                maxPolarAngle={Math.PI} // Allow full vertical rotation
                                 dampingFactor={0.05}
                                 rotateSpeed={0.5}
-                                zoomSpeed={0.8}
+                                zoomSpeed={1.2} // Increased zoom speed
                             />
                         </Suspense>
                     </Canvas>
