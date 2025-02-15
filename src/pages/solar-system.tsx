@@ -5,6 +5,9 @@ import { OrbitControls, Stars } from '@react-three/drei';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import ErrorBoundary from '@/components/ErrorBoundary';
+import {AlienClock} from "@/components/ui/AlienClock";
+import { useSound } from 'use-sound';
+import { Howler } from 'howler';
 
 // Define CameraMode type
 type CameraMode = 'free' | 'locked';
@@ -28,8 +31,39 @@ function LoadingScreen() {
 }
 
 export default function SolarSystemPage() {
+
     const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
     const [cameraMode, setCameraMode] = useState<CameraMode>('free');
+    const [isMuted, setIsMuted] = useState(false);
+    const [playSpaceAmbient, { stop: stopSpaceAmbient }] = useSound(
+        '/sounds/ambient-space.mp3',
+        {
+            volume: 0.2,
+            loop: true,
+            interrupt: true
+        }
+    );
+
+    const [playPlanetSound] = useSound(
+        '/sounds/transition.mp3',
+        {
+            volume: 0.4,
+            interrupt: true
+        }
+    );
+    // Handle sound on mount/unmount
+    useEffect(() => {
+        playSpaceAmbient();
+        return () => {
+            stopSpaceAmbient();
+        };
+    }, [playSpaceAmbient, stopSpaceAmbient]);
+
+    // Mute control
+    useEffect(() => {
+        Howler.volume(isMuted ? 0 : 1);
+    }, [isMuted]);
+
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -40,8 +74,15 @@ export default function SolarSystemPage() {
 
     return (
         <ErrorBoundary>
+            <LoadingScreen />
             <div className="h-screen w-screen relative bg-black">
                 <div className="fixed top-4 right-4 z-50 flex gap-4">
+                    <button
+                        className="fixed top-20 right-4 z-50 bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700"
+                        onClick={() => setIsMuted(!isMuted)}
+                    >
+                        {isMuted ? '🔇' : '🔊'}
+                    </button>
                     <button
                         className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors"
                         onClick={() => setCameraMode((prev: CameraMode) => (prev === 'free' ? 'locked' : 'free'))}
@@ -56,7 +97,7 @@ export default function SolarSystemPage() {
                     </Link>
                 </div>
 
-                <div className="fixed top-4 left-4 z-50 bg-black/50 p-4 rounded-lg text-white">
+                <div className="fixed bottom-0 right-4 z-50 bg-black/50 p-4 rounded-lg text-white">
                     <h2 className="text-xl mb-2">Navigation Guide</h2>
                     <ul className="space-y-1">
                         <li>• Click planets to zoom in/out</li>
@@ -66,9 +107,9 @@ export default function SolarSystemPage() {
                     </ul>
                 </div>
 
-                <div className="fixed bottom-4 left-4 z-50 text-white">
+                <div className="fixed bottom-4 left-4 z-20 text-white">
                     <h1 className="text-2xl mb-2">Abhinav Singh</h1>
-                    <div className="text-xl">{currentTime}</div>
+                    <div className="text-xl">{<AlienClock/>}</div>
                 </div>
 
                 <div className="absolute inset-0">
@@ -90,7 +131,11 @@ export default function SolarSystemPage() {
                                 fade
                                 speed={1}
                             />
-                            <SolarSystem cameraMode={cameraMode} setCameraMode={setCameraMode} />
+                            <SolarSystem
+                                cameraMode={cameraMode}
+                                setCameraMode={setCameraMode}
+                                // onPlanetHover={() => !isMuted && playPlanetSound()}
+                            />
                             <OrbitControls
                                 enablePan={true}
                                 enableZoom={true}

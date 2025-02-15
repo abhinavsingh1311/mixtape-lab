@@ -2,7 +2,6 @@ import { AdaptiveFog } from "./BackgroundElements/AdaptiveFog";
 import BackgroundParticles from "./BackgroundElements/BackgroundParticles";
 import InfiniteGrid from "./BackgroundElements/InfiniteGrid";
 
-
 export const ClosedSpaceScene = () => {
     return (
         <>
@@ -12,3 +11,6 @@ export const ClosedSpaceScene = () => {
         </>
     );
 };
+
+// You can also export as default if you prefer
+export default ClosedSpaceScene;

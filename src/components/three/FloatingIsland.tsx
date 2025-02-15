@@ -218,6 +218,7 @@ export default function FloatingIsland({ onPortalClick, onLoad, ...props }: Floa
                 anchorY="middle"
                 maxWidth={2}
                 renderOrder={2}
+                font="/Starjedi.ttf"
             >
                 Welcome!
             </Text>

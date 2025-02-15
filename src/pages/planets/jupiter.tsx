@@ -18,19 +18,19 @@ export default function JupiterPage() {
                             icon={<Mail size={20} />}
                             label="Email"
                             value="your.email@example.com"
-                            href="mailto:your.email@example.com"
+                            href="singhabhinav1311@gmail.com"
                         />
                         <ContactCard
                             icon={<Linkedin size={20} />}
                             label="LinkedIn"
                             value="LinkedIn Profile"
-                            href="https://linkedin.com/in/yourusername"
+                            href="https://linkedin.com/in/singhabhinav13112002"
                         />
                         <ContactCard
                             icon={<Github size={20} />}
                             label="GitHub"
                             value="GitHub Profile"
-                            href="https://github.com/yourusername"
+                            href="https://github.com/abhinavsingh1311"
                         />
                     </div>
                 </section>

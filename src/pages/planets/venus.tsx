@@ -8,7 +8,7 @@ export default function VenusPage() {
             title: "3D Solar System Portfolio",
             description: "Interactive portfolio built with Three.js and React",
             technologies: ["React", "Three.js", "TypeScript"],
-            github: "https://github.com/yourusername/solar-portfolio"
+            github: "https://github.com/abhinavsingh1311/mixtape-lab.git"
         }
         // Add more projects
     ];

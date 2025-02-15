@@ -5,9 +5,9 @@ import { ExperienceCard } from '@/components/shared/ExperienceCard';
 export default function MarsPage() {
     const experiences = [
         {
-            company: "Tech Company",
-            role: "Senior Software Engineer",
-            period: "2022 - Present",
+            company: "Capstone Project",
+            role: "Fullstack Software Engineer",
+            period: "September 2024 - December 2024",
             description: [
                 "Led development of scalable microservices",
                 "Mentored junior developers",

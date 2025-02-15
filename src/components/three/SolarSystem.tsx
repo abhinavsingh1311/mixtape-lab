@@ -5,12 +5,24 @@ import * as THREE from 'three';
 import { useRouter } from 'next/router';
 import { Html, useTexture, OrbitControls } from '@react-three/drei';
 import { Vector3 } from 'three';
+import { Text } from '@react-three/drei';
+import { extend } from '@react-three/fiber';
+import useSound from "use-sound";
+
+// Add type extension
+// declare global {
+//     namespace JSX {
+//         interface IntrinsicElements {
+//             text: any;
+//         }
+//     }
+// }
 
 // Set color management
 THREE.ColorManagement.enabled = true;
 
 // Fallback texture
-const FALLBACK_TEXTURE = new THREE.TextureLoader().load('/textures/fallback.jpg');
+const FALLBACK_TEXTURE = new THREE.TextureLoader().load('/images/fallback.png');
 
 interface MoonData {
     texture: string;
@@ -137,6 +149,7 @@ const OrbitLine: React.FC<{ radius: number }> = ({ radius }) => (
 interface PlanetProps {
     planet: PlanetSystem;
     onClick: (route: string, position: Vector3) => void;
+    index: number; // Add index prop
 }
 
 const PlanetGlow: React.FC<{ radius: number; color: string }> = ({ radius, color }) => (
@@ -314,7 +327,10 @@ const Comet: React.FC = () => {
     );
 };
 
-const Planet: React.FC<PlanetProps> = ({ planet, onClick }) => {
+const Planet: React.FC<PlanetProps> = ({ planet, onClick,index  }) => {
+    // Add click sound
+    const [playClickSound] = useSound('/sounds/click.mp3');
+    const [playHoverSound] = useSound('/sounds/transition.mp3');
     const router = useRouter();
     const meshRef = useRef<THREE.Mesh>(null);
     const [hovered, setHovered] = useState(false);
@@ -323,11 +339,11 @@ const Planet: React.FC<PlanetProps> = ({ planet, onClick }) => {
         bumpMap?: THREE.Texture;
     }>({ map: FALLBACK_TEXTURE });
 
+    // Update handlePlanetClick
     const handlePlanetClick = (e: ThreeEvent<MouseEvent>) => {
         e.stopPropagation();
-        // Navigate to the planet-specific page
+        playClickSound();
         router.push(`/planets/${planet.name.toLowerCase()}`);
-        // Also call the original onClick for any camera animations
         onClick(planet.link, new Vector3(meshRef.current!.position.x, 0, meshRef.current!.position.z));
     };
 
@@ -397,15 +413,16 @@ const Planet: React.FC<PlanetProps> = ({ planet, onClick }) => {
                 {hovered && (
                     <>
                         <PlanetGlow radius={planet.size} color="#ffffff" />
-                        <Html position={[0, planet.size + 3, 0]}>
-                            <div className="bg-black/75 text-white px-3 py-1 rounded text-sm whitespace-nowrap">
-                                {planet.name}
-                                {planet.description && (
-                                    <div className="text-xs opacity-75">{planet.description}</div>
-                                )}
-                                <div className="text-xs text-blue-300">Click to explore</div>
-                            </div>
-                        </Html>
+                        <Text
+                            position={[0, planet.size + 3 + (index * 1.5), 0]}
+                            fontSize={0.8}
+                            color="white"
+                            anchorX="center"
+                            anchorY="middle"
+                            rotation={[0, Math.PI, 0]}
+                        >
+                            {planet.name}
+                        </Text>
                     </>
                 )}
 
@@ -764,6 +781,7 @@ const SolarSystem: React.FC<SolarSystemProps> = ({ cameraMode, setCameraMode }) 
                     key={index}
                     planet={planet}
                     onClick={handlePlanetClick}
+                    index={index} // Pass index to Planet
                 />
             ))}
 

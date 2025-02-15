@@ -1,7 +1,21 @@
-/* styles/globals.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: 'Starjedi';
+  src: url('/Starjedi.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer base {
+  html {
+    font-family: 'Starjedi', system-ui, sans-serif;
+  }
+}
+
 
 body {
   background-color: #0a0a0a;
@@ -21,29 +35,34 @@ canvas {
 }
 
 .bg-neon-gradient {
-  background: linear-gradient(45deg,
-      rgba(14, 165, 233, 0.1) 0%,
-      rgba(124, 58, 237, 0.1) 50%,
-      rgba(239, 68, 68, 0.1) 100%);
+  background: linear-gradient(
+          45deg,
+          rgba(14, 165, 233, 0.1) 0%,
+          rgba(124, 58, 237, 0.1) 50%,
+          rgba(239, 68, 68, 0.1) 100%
+  );
   z-index: 1;
 }
 
-globals.css .neon-text {
+.neon-text {
   text-shadow: 0 0 10px #00ffff,
-    0 0 20px #00ffff,
-    0 0 30px #00ffff;
+  0 0 20px #00ffff,
+  0 0 30px #00ffff;
   animation: neon-pulse 1.5s infinite alternate;
+}
+
+.font-sans {
+  font-family: 'Starjedi', ui-sans-serif, system-ui;
 }
 
 @keyframes neon-pulse {
   from {
     text-shadow: 0 0 10px #00ffff,
-      0 0 20px #00ffff;
+    0 0 20px #00ffff;
   }
-
   to {
     text-shadow: 0 0 20px #00ffff,
-      0 0 30px #00ffff,
-      0 0 40px #00ffff;
+    0 0 30px #00ffff,
+    0 0 40px #00ffff;
   }
 }
