@@ -16,7 +16,6 @@ export default function MercuryPage() {
                 <section className="mb-12">
                     <h2 className="text-2xl font-bold mb-6">Early Milestones</h2>
                     <ul className="space-y-4">
-                        <li>Self-taught programmer with a focus on web technologies</li>
                         <li>Graduated with honors in DMIT:CSD diploma from Northern Alberta Institute of Technology</li>
                         <li>Active participant in coding communities and hackathons</li>
                     </ul>

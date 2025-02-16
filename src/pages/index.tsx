@@ -4,11 +4,11 @@ import {Suspense, useEffect, useMemo, useRef, useState} from 'react';
 import * as THREE from 'three';
 import { useRouter } from 'next/router';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
+import { BlendFunction } from 'postprocessing';
 import FloatingIsland from '@/components/three/FloatingIsland';
 import { ClosedSpaceScene } from '@/components/three/ClosedSpaceScene';
 import { AlienClock } from '@/components/ui/AlienClock';
 import gsap from 'gsap';
-// Add at the top with other imports
 import useSound from 'use-sound';
 import { Howler } from 'howler';
 
@@ -257,7 +257,7 @@ export default function Home() {
                 clearInterval(messageInterval);
             };
         }
-    }, [showIntro, messages.length, playAmbient, playPortalHum]); // Add dependencies
+    }, [showIntro, messages.length, playAmbient, playPortalHum, stopAmbient]); // Add dependencies
 
 // Update cleanup effect
     useEffect(() => {
@@ -318,10 +318,10 @@ export default function Home() {
                         <>
                             <EffectComposer>
                                 <Bloom
-                                    intensity={1.5}
-                                    radius={0.7}
-                                    luminanceThreshold={0.1}
-                                    luminanceSmoothing={0.9}
+                                    blendFunction={BlendFunction.ADD}
+                                    mipmapBlur
+                                    luminanceSmoothing={0}
+                                    intensity={1.5} // Adjust this value as needed
                                 />
                             </EffectComposer>
 

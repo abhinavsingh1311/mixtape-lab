@@ -17,8 +17,8 @@ export default function JupiterPage() {
                         <ContactCard
                             icon={<Mail size={20} />}
                             label="Email"
-                            value="your.email@example.com"
-                            href="singhabhinav1311@gmail.com"
+                            value="singhabhinav1311@gmail.com"
+                            href="mailto:singhabhinav1311@gmail.com"
                         />
                         <ContactCard
                             icon={<Linkedin size={20} />}
