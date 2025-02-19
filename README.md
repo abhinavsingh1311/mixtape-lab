@@ -50,12 +50,11 @@ Each planet in the solar system represents a different section of the portfolio:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/abhinavsingh/mixtape-lab.git
+   git clone https://github.com/abhinavsingh1311/mixtape-lab.git
    ```
 
 2. Install dependencies:
    ```bash
-   cd space-portfolio
    npm install
    ```
 
