@@ -632,7 +632,7 @@ const Sun: React.FC = () => {
 
     useEffect(() => {
         new THREE.TextureLoader().load(
-            '/textures/sun/sunmap.jpg',
+            '/textures/sun/2k_sun.jpg',
             (texture) => {
                 texture.colorSpace = THREE.SRGBColorSpace;
                 setSunTexture(texture);
