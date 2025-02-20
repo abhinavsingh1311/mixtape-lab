@@ -30,7 +30,7 @@ export default function Home() {
         interrupt: true
     });
 
-    const [playPortalHum] = useSound('/sounds/portal-open.mp3', {
+    const [playPortalHum, {stop: stopPortal}] = useSound('/sounds/portal-open.mp3', {
         volume: 0.2,
         loop: true,
         interrupt: true
@@ -74,6 +74,7 @@ export default function Home() {
         setIsIslandVisible(false);
         stopAmbient();
         setTimeout(() => router.push('/solar-system'), 500);
+        stopPortal();
     };
 
     const startAmbient = () => {
