@@ -6,13 +6,13 @@ export default function VenusPage() {
         {
             title: "Projects",
             description: "I have added all of my projects in this github repository. Take a look at those by clicking the link!",
-            imageUrl: "/projects/portfolio.png",
+            imageUrl: "/projects/projects.png",
             link: "https://github.com/abhinavsingh1311/Projects.git"
         },
         {
             title: "Supply Chain Management System",
             description: "Comprehensive supply chain management system with secure authentication and efficient data pipelines",
-            imageUrl: "/projects/.png",
+            imageUrl: "/projects/capstone.png",
             link: "https://certifiedorigins.space"
         },
 
