@@ -15,7 +15,7 @@ export default function MarsPage() {
             ],
             technologies: ["React", "Node.js", "AWS"]
         }
-        // Add more experiences
+       
     ];
 
     return (

@@ -35,7 +35,7 @@ export default function MercuryPage() {
                         <div className="text-gray-400 mb-2">Northern Alberta Institute of Technology (NAIT) | 2023-2024</div>
                         <ul className="list-disc list-inside text-gray-300">
                             <li>Graduated with 4.0 CGPA</li>
-                            <li>Dean's honor roll</li>
+                            <li>Dean honor roll</li>
                             <li>Specialized in full-stack development</li>
                         </ul>
                     </div>

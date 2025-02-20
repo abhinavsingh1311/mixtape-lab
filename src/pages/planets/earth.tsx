@@ -6,15 +6,23 @@ export default function EarthPage() {
     const skills = [
         {
             category: "Frontend",
-            items: ["React", "TypeScript", "Three.js", "Next.js"]
+            items: ["React", "Next.js", "Blazor", "Flutter", "Three.js", "HTML5", "CSS3"]
         },
         {
             category: "Backend",
-            items: ["Node.js", "Python", "PostgreSQL", "MongoDB"]
+            items: ["ASP.NET", "Node.js", "RESTful APIs", "FastAPI"]
         },
         {
-            category: "DevOps",
-            items: ["Docker", "AWS", "CI/CD", "Git"]
+            category: "Languages",
+            items: ["C#", "JavaScript", "TypeScript", "Python", "Dart", "SQL"]
+        },
+        {
+            category: "Databases & Cloud",
+            items: ["MSSQL Server", "PostgreSQL", "Firebase", "Supabase", "Digital Ocean"]
+        },
+        {
+            category: "Tools & Others",
+            items: ["Docker", "Git", "SSAS", "SSIS", "SSRS", "Blender"]
         }
     ];
 

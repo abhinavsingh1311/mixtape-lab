@@ -23,7 +23,7 @@ export const Planet: React.FC<PlanetProps> = ({ planet, onClick, index }) => {
 
     const handlePlanetClick = (e: ThreeEvent<MouseEvent>) => {
         e.stopPropagation();
-        if (planet.name === 'Mercury') {
+        if (planet.name !== "xx") {
             setShowOptions(!showOptions);
         } else {
             playClickSound();
@@ -118,7 +118,7 @@ export const Planet: React.FC<PlanetProps> = ({ planet, onClick, index }) => {
                                 anchorY="middle"
                                 rotation={[0.5, Math.PI, 0]}
                             >
-                                {planet.description}
+                                {planet.name}
                             </Text>
                         )}
                     </>
@@ -127,18 +127,6 @@ export const Planet: React.FC<PlanetProps> = ({ planet, onClick, index }) => {
                 {showOptions && planet.name === 'Mercury' && (
                     <Html position={[0, planet.size + 2, 0]}>
                         <div className="bg-black/80 p-4 rounded-lg backdrop-blur-sm text-white min-w-[200px]">
-                            {/*<button*/}
-                            {/*    className="block w-full text-left px-4 py-2 hover:bg-white/20 rounded transition-colors mb-2"*/}
-                            {/*    onClick={handleOptionClick('view')}*/}
-                            {/*>*/}
-                            {/*    👁 View Resume*/}
-                            {/*</button>*/}
-                            {/*<button*/}
-                            {/*    className="block w-full text-left px-4 py-2 hover:bg-white/20 rounded transition-colors mb-2"*/}
-                            {/*    onClick={handleOptionClick('download')}*/}
-                            {/*>*/}
-                            {/*    ⬇ Download Resume*/}
-                            {/*</button>*/}
                             <button
                                 className="block w-full text-left px-4 py-2 hover:bg-white/20 rounded transition-colors"
                                 onClick={handleOptionClick('navigate')}
@@ -148,8 +136,67 @@ export const Planet: React.FC<PlanetProps> = ({ planet, onClick, index }) => {
                         </div>
                     </Html>
                 )}
-
+                {showOptions && planet.name === 'Venus' && (
+                    <Html position={[0, planet.size + 2, 0]}>
+                        <div className="bg-black/80 p-4 rounded-lg backdrop-blur-sm text-white min-w-[200px]">
+                            <button
+                                className="block w-full text-left px-4 py-2 hover:bg-white/20 rounded transition-colors"
+                                onClick={handleOptionClick('navigate')}
+                            >
+                                Projects
+                            </button>
+                        </div>
+                    </Html>
+                )}
+                {showOptions && planet.name === 'Earth' && (
+                    <Html position={[0, planet.size + 2, 0]}>
+                        <div className="bg-black/80 p-4 rounded-lg backdrop-blur-sm text-white min-w-[200px]">
+                            <button
+                                className="block w-full text-left px-4 py-2 hover:bg-white/20 rounded transition-colors"
+                                onClick={handleOptionClick('navigate')}
+                            >
+                              Skills
+                            </button>
+                        </div>
+                    </Html>
+                )}
+                {showOptions && planet.name === 'Mars' && (
+                    <Html position={[0, planet.size + 2, 0]}>
+                        <div className="bg-black/80 p-4 rounded-lg backdrop-blur-sm text-white min-w-[200px]">
+                            <button
+                                className="block w-full text-left px-4 py-2 hover:bg-white/20 rounded transition-colors"
+                                onClick={handleOptionClick('navigate')}
+                            >
+                               Work Experiences
+                            </button>
+                        </div>
+                    </Html>
+                )}
+                {showOptions && planet.name === 'Jupiter' && (
+                    <Html position={[0, planet.size + 2, 0]}>
+                        <div className="bg-black/80 p-4 rounded-lg backdrop-blur-sm text-white min-w-[200px]">
+                            <button
+                                className="block w-full text-left px-4 py-2 hover:bg-white/20 rounded transition-colors"
+                                onClick={handleOptionClick('navigate')}
+                            >
+                               Contact Info
+                            </button>
+                        </div>
+                    </Html>
+                )}
                 {planet.name === 'Saturn' && <SaturnRings planetSize={planet.size} />}
+                {showOptions && planet.name === 'Saturn' && (
+                    <Html position={[0, planet.size + 2, 0]}>
+                        <div className="bg-black/80 p-4 rounded-lg backdrop-blur-sm text-white min-w-[200px]">
+                            <button
+                                className="block w-full text-left px-4 py-2 hover:bg-white/20 rounded transition-colors"
+                                onClick={handleOptionClick('navigate')}
+                            >
+                              Blogs
+                            </button>
+                        </div>
+                    </Html>
+                )}
                 {planet.name === 'Earth' && <AtmosphericGlow radius={planet.size} />}
                 {planet.moons?.map((moon, index) => (
                     <Moon
