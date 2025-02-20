@@ -1,6 +1,6 @@
-import { AdaptiveFog } from "./BackgroundElements/AdaptiveFog";
-import BackgroundParticles from "./BackgroundElements/BackgroundParticles";
-import InfiniteGrid from "./BackgroundElements/InfiniteGrid";
+import { AdaptiveFog } from "./AdaptiveFog";
+import BackgroundParticles from "./BackgroundParticles";
+import InfiniteGrid from "./InfiniteGrid";
 
 export const ClosedSpaceScene = () => {
     return (

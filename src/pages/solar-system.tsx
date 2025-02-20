@@ -13,7 +13,7 @@ import { Howler } from 'howler';
 type CameraMode = 'free' | 'locked';
 
 // Dynamically import the SolarSystem component
-const SolarSystem = dynamic(() => import('@/components/three/SolarSystem'), {
+const SolarSystem = dynamic(() => import('@/components/three/SolarSystem/index'), {
     ssr: false
 });
 
