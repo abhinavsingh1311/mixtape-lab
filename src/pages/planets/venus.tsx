@@ -1,16 +1,21 @@
-// src/pages/planets/venus.tsx
 import { Layout } from '@/components/shared/Layout';
-import ProjectCard  from '@/components/shared/ProjectCard';
+import ProjectCard from '@/components/shared/ProjectCard';
 
 export default function VenusPage() {
     const projects = [
         {
-            title: "3D Solar System Portfolio",
-            description: "Interactive portfolio built with Three.js and React",
-            technologies: ["React", "Three.js", "TypeScript"],
-            github: "https://github.com/abhinavsingh1311/mixtape-lab.git"
-        }
-        // Add more projects
+            title: "Projects",
+            description: "I have added all of my projects in this github repository. Take a look at those by clicking the link!",
+            imageUrl: "/projects/portfolio.png",
+            link: "https://github.com/abhinavsingh1311/Projects.git"
+        },
+        {
+            title: "Supply Chain Management System",
+            description: "Comprehensive supply chain management system with secure authentication and efficient data pipelines",
+            imageUrl: "/projects/.png",
+            link: "https://certifiedorigins.space"
+        },
+
     ];
 
     return (
@@ -19,13 +24,10 @@ export default function VenusPage() {
             title="My Work"
             description="Portfolio and projects"
         >
-            <div className="prose prose-invert max-w-none">
-                <section className="mb-12">
-                    <h2 className="text-2xl font-bold mb-6">Featured Projects</h2>
-                    {projects.map((project, index) => (
-                        <ProjectCard imageUrl={''} link={''} key={index} {...project} />
-                    ))}
-                </section>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {projects.map((project, index) => (
+                    <ProjectCard key={index} {...project} />
+                ))}
             </div>
         </Layout>
     );

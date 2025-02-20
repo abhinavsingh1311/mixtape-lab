@@ -127,18 +127,18 @@ export const Planet: React.FC<PlanetProps> = ({ planet, onClick, index }) => {
                 {showOptions && planet.name === 'Mercury' && (
                     <Html position={[0, planet.size + 2, 0]}>
                         <div className="bg-black/80 p-4 rounded-lg backdrop-blur-sm text-white min-w-[200px]">
-                            <button
-                                className="block w-full text-left px-4 py-2 hover:bg-white/20 rounded transition-colors mb-2"
-                                onClick={handleOptionClick('view')}
-                            >
-                                👁 View Resume
-                            </button>
-                            <button
-                                className="block w-full text-left px-4 py-2 hover:bg-white/20 rounded transition-colors mb-2"
-                                onClick={handleOptionClick('download')}
-                            >
-                                ⬇ Download Resume
-                            </button>
+                            {/*<button*/}
+                            {/*    className="block w-full text-left px-4 py-2 hover:bg-white/20 rounded transition-colors mb-2"*/}
+                            {/*    onClick={handleOptionClick('view')}*/}
+                            {/*>*/}
+                            {/*    👁 View Resume*/}
+                            {/*</button>*/}
+                            {/*<button*/}
+                            {/*    className="block w-full text-left px-4 py-2 hover:bg-white/20 rounded transition-colors mb-2"*/}
+                            {/*    onClick={handleOptionClick('download')}*/}
+                            {/*>*/}
+                            {/*    ⬇ Download Resume*/}
+                            {/*</button>*/}
                             <button
                                 className="block w-full text-left px-4 py-2 hover:bg-white/20 rounded transition-colors"
                                 onClick={handleOptionClick('navigate')}

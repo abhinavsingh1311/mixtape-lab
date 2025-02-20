@@ -5,16 +5,8 @@ import { ArticleCard } from '@/components/shared/ArticleCard';
 export default function SaturnPage() {
     const articles = [
         {
-            title: "Building a 3D Solar System Portfolio",
-            excerpt: "Learn how I created this interactive portfolio using Three.js and React",
-            date: "2024-02-14",
-            readTime: "5",
-            link: "#"
-        }
-        ,
-        {
-            title: "Poems",
-            excerpt: "I love to write poems!! Check out my blog!!",
+            title: "Poetry and Creative Writing",
+            excerpt: "Explore my collection of poems and creative writings on my personal blog.",
             date: "2024-02-14",
             readTime: "5",
             link: "https://envisagedmemoirs.blogspot.com/"
