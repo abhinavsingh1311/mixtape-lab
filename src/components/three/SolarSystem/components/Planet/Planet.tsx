@@ -131,7 +131,7 @@ export const Planet: React.FC<PlanetProps> = ({ planet, onClick, index }) => {
                                 className="block w-full text-left px-4 py-2 hover:bg-white/20 rounded transition-colors"
                                 onClick={handleOptionClick('navigate')}
                             >
-                                View Journey
+                                {planet.description}
                             </button>
                         </div>
                     </Html>
@@ -143,7 +143,7 @@ export const Planet: React.FC<PlanetProps> = ({ planet, onClick, index }) => {
                                 className="block w-full text-left px-4 py-2 hover:bg-white/20 rounded transition-colors"
                                 onClick={handleOptionClick('navigate')}
                             >
-                                Projects
+                                {planet.description}
                             </button>
                         </div>
                     </Html>
@@ -155,7 +155,7 @@ export const Planet: React.FC<PlanetProps> = ({ planet, onClick, index }) => {
                                 className="block w-full text-left px-4 py-2 hover:bg-white/20 rounded transition-colors"
                                 onClick={handleOptionClick('navigate')}
                             >
-                              Skills
+                                {planet.description}
                             </button>
                         </div>
                     </Html>
@@ -167,7 +167,7 @@ export const Planet: React.FC<PlanetProps> = ({ planet, onClick, index }) => {
                                 className="block w-full text-left px-4 py-2 hover:bg-white/20 rounded transition-colors"
                                 onClick={handleOptionClick('navigate')}
                             >
-                               Work Experiences
+                                {planet.description}
                             </button>
                         </div>
                     </Html>
@@ -179,7 +179,7 @@ export const Planet: React.FC<PlanetProps> = ({ planet, onClick, index }) => {
                                 className="block w-full text-left px-4 py-2 hover:bg-white/20 rounded transition-colors"
                                 onClick={handleOptionClick('navigate')}
                             >
-                               Contact Info
+                                {planet.description}
                             </button>
                         </div>
                     </Html>
@@ -192,7 +192,7 @@ export const Planet: React.FC<PlanetProps> = ({ planet, onClick, index }) => {
                                 className="block w-full text-left px-4 py-2 hover:bg-white/20 rounded transition-colors"
                                 onClick={handleOptionClick('navigate')}
                             >
-                              Blogs
+                                {planet.description}
                             </button>
                         </div>
                     </Html>

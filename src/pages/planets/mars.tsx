@@ -13,9 +13,9 @@ export default function MarsPage() {
                 "Mentored junior developers",
                 "Implemented CI/CD pipelines"
             ],
-            technologies: ["React", "Node.js", "AWS"]
+            technologies: ["React", "Node.js", "Digital Ocean","SupaBase"]
         }
-       
+
     ];
 
     return (
