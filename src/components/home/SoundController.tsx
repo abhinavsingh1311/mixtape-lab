@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import useSound from 'use-sound';
 import { Howler } from 'howler';
 
 interface SoundControllerProps {
@@ -8,6 +7,8 @@ interface SoundControllerProps {
     isIslandVisible: boolean;
     stopAmbient: () => void;
     playPortalHum: () => void;
+    ambientStarted: boolean;
+    playAmbient: () => void;
 }
 
 export const SoundController: React.FC<SoundControllerProps> = ({
@@ -15,21 +16,29 @@ export const SoundController: React.FC<SoundControllerProps> = ({
                                                                     showIntro,
                                                                     isIslandVisible,
                                                                     stopAmbient,
-                                                                    playPortalHum
+                                                                    playPortalHum,
+                                                                    ambientStarted,
+                                                                    playAmbient
                                                                 }) => {
+    // Handle muting
     useEffect(() => {
         Howler.volume(isMuted ? 0 : 1);
     }, [isMuted]);
 
+    // Handle sound transitions
     useEffect(() => {
-        if (showIntro) {
-            return;
-        }
-        if (isIslandVisible) {
-            playPortalHum();
+        if (!showIntro && isIslandVisible) {
             stopAmbient();
+            playPortalHum();
         }
     }, [showIntro, isIslandVisible, playPortalHum, stopAmbient]);
+
+    // Handle ambient sound
+    useEffect(() => {
+        if (!ambientStarted && !isIslandVisible) {
+            playAmbient();
+        }
+    }, [ambientStarted, isIslandVisible, playAmbient]);
 
     return null;
 };

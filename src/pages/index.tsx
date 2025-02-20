@@ -1,7 +1,6 @@
-// src/pages/index.tsx
 import { Suspense, useState, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
-import {OrbitControls, PerspectiveCamera} from '@react-three/drei';
+import {OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
 import { BlendFunction } from 'postprocessing';
 import { useRouter } from 'next/router';
@@ -10,7 +9,7 @@ import * as THREE from 'three';
 import FloatingIsland from '@/components/three/FloatingIsland';
 import { ClosedSpaceScene } from '@/components/three/BackgroundElements/ClosedSpaceScene';
 import { AlienClock } from '@/components/ui/AlienClock';
-import { IntroScene } from '@/components/home/IntroScene';
+import {IntroScene} from '@/components/home/IntroScene';
 import { AutoTrackingSystem } from '@/components/home/AutoTracking';
 import { LoadingScreen } from '@/components/home/LoadingScreen';
 import { SoundController } from '@/components/home/SoundController';
@@ -22,13 +21,8 @@ export default function Home() {
     const [showIntro, setShowIntro] = useState(true);
     const [currentMessage, setCurrentMessage] = useState(0);
     const [isMuted, setIsMuted] = useState(false);
+    const [ambientStarted, setAmbientStarted] = useState(false);
     const router = useRouter();
-    const messages = [
-        "...Eerie Noise>>>>>.....",
-        "Wandering through the cosmic void...",
-        "Something beckons in the distance...",
-        "A mysterious portal appears..."
-    ];
 
     const [playAmbient, { stop: stopAmbient }] = useSound('/sounds/ambient-space.mp3', {
         volume: 0.3,
@@ -37,24 +31,29 @@ export default function Home() {
     });
 
     const [playPortalHum] = useSound('/sounds/portal-open.mp3', {
-        volume: 0.4,
+        volume: 0.2,
         loop: true,
         interrupt: true
     });
 
     useEffect(() => {
-        if (showIntro) {
+        // Start ambient sound immediately
+        if (!ambientStarted) {
             playAmbient();
+            setAmbientStarted(true);
+        }
+
+        if (showIntro) {
             let messageInterval: NodeJS.Timeout;
             const timer = setTimeout(() => {
-                setCurrentMessage(0);
                 messageInterval = setInterval(() => {
                     setCurrentMessage(prev => {
-                        if (prev >= messages.length - 1) {
+                        if (prev >= 3) {
                             clearInterval(messageInterval);
                             setTimeout(() => {
                                 setShowIntro(false);
                                 setIsIslandVisible(true);
+                                stopAmbient();
                             }, 1500);
                             return prev;
                         }
@@ -65,15 +64,23 @@ export default function Home() {
 
             return () => {
                 clearTimeout(timer);
-                clearInterval(messageInterval);
+                if (messageInterval) clearInterval(messageInterval);
             };
         }
-    }, [showIntro, messages.length, playAmbient]);
+    }, [showIntro, ambientStarted, playAmbient]);
 
     const handlePortalClick = () => {
         setShowPortalMessage(false);
         setIsIslandVisible(false);
+        stopAmbient();
         setTimeout(() => router.push('/solar-system'), 500);
+    };
+
+    const startAmbient = () => {
+        if (!ambientStarted) {
+            playAmbient();
+            setAmbientStarted(true);
+        }
     };
 
     return (
@@ -108,6 +115,8 @@ export default function Home() {
                 isIslandVisible={isIslandVisible}
                 stopAmbient={stopAmbient}
                 playPortalHum={playPortalHum}
+                ambientStarted={ambientStarted}
+                playAmbient={startAmbient}
             />
 
             <Canvas

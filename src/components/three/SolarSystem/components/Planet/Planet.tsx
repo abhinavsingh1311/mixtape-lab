@@ -12,7 +12,12 @@ import * as THREE from 'three';
 
 export const Planet: React.FC<PlanetProps> = ({ planet, onClick, index }) => {
     const [playClickSound] = useSound('/sounds/click.mp3');
-    const [playHoverSound] = useSound('/sounds/transition.mp3');
+    const [playHoverSound] = useSound('/sounds/transition.mp3',
+        {
+            volume: 0.1,
+            interrupt: true,
+            loop: false,
+        })
     const meshRef = useRef<THREE.Mesh>(null);
     const [hovered, setHovered] = useState(false);
     const [textures, setTextures] = useState<{
