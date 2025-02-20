@@ -1,7 +1,7 @@
 // components/three/CanvasWrapper.tsx
 import { Canvas, Props as CanvasProps, RootState } from '@react-three/fiber';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
-import { WebGLContextHandler } from '../ui/WebGlContextHandler';
+import { WebGLContextHandler } from './WebGlContextHandler';
 import { ReactNode } from 'react';
 import * as THREE from 'three';
 

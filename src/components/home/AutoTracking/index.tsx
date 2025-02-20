@@ -1,9 +1,8 @@
-// components/three/AutoTrackingSystem.tsx
+import { useRef, useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
-function AutoTrackingSystem() {
+export const AutoTrackingSystem: React.FC = () => {
     const { camera } = useThree();
     const target = useRef(new THREE.Vector3());
     const mouse = useRef({ x: 0, y: 0 });
@@ -25,13 +24,9 @@ function AutoTrackingSystem() {
                 y: (e.clientY / window.innerHeight - 0.5) * 2,
             };
         };
-
         window.addEventListener('mousemove', onMouseMove);
         return () => window.removeEventListener('mousemove', onMouseMove);
     }, []);
 
     return null;
-}
-
-export default  AutoTrackingSystem ;
-
+};
