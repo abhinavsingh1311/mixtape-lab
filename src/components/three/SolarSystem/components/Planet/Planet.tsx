@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
 import { ThreeEvent, useFrame } from '@react-three/fiber';
-import { Text } from '@react-three/drei';
+import { Text, Html } from '@react-three/drei';
 import { PlanetProps } from '../../types';
 import { Moon } from '../Moon';
 import { OrbitLine } from '../OrbitLine';
@@ -12,14 +12,10 @@ import * as THREE from 'three';
 
 export const Planet: React.FC<PlanetProps> = ({ planet, onClick, index }) => {
     const [playClickSound] = useSound('/sounds/click.mp3');
-    const [playHoverSound] = useSound('/sounds/transition.mp3',
-        {
-            volume: 0.1,
-            interrupt: true,
-            loop: false,
-        })
+    const [playHoverSound] = useSound('/sounds/transition.mp3');
     const meshRef = useRef<THREE.Mesh>(null);
     const [hovered, setHovered] = useState(false);
+    const [showOptions, setShowOptions] = useState(false);
     const [textures, setTextures] = useState<{
         map: THREE.Texture;
         bumpMap?: THREE.Texture;
@@ -27,8 +23,33 @@ export const Planet: React.FC<PlanetProps> = ({ planet, onClick, index }) => {
 
     const handlePlanetClick = (e: ThreeEvent<MouseEvent>) => {
         e.stopPropagation();
+        if (planet.name === 'Mercury') {
+            setShowOptions(!showOptions);
+        } else {
+            playClickSound();
+            onClick(planet.link, new THREE.Vector3(meshRef.current!.position.x, 0, meshRef.current!.position.z));
+        }
+    };
+
+    const handleOptionClick = (option: 'view' | 'download' | 'navigate') => (e: React.MouseEvent) => {
+        e.stopPropagation();
         playClickSound();
-        onClick(planet.link, new THREE.Vector3(meshRef.current!.position.x, 0, meshRef.current!.position.z));
+
+        switch (option) {
+            case 'view':
+                window.open('/resume.pdf', '_blank');
+                break;
+            case 'download':
+                const link = document.createElement('a');
+                link.href = '/resume.pdf';
+                link.download = 'AbhinavSingh_Resume.pdf';
+                link.click();
+                break;
+            case 'navigate':
+                onClick(planet.link, new THREE.Vector3(meshRef.current!.position.x, 0, meshRef.current!.position.z));
+                break;
+        }
+        setShowOptions(false);
     };
 
     useEffect(() => {
@@ -88,17 +109,44 @@ export const Planet: React.FC<PlanetProps> = ({ planet, onClick, index }) => {
                 {hovered && (
                     <>
                         <PlanetGlow radius={planet.size} color="#ffffff" />
-                        <Text
-                            position={[0, planet.size + 3 + (index * 1.5), 0]}
-                            fontSize={0.8}
-                            color="white"
-                            anchorX="center"
-                            anchorY="middle"
-                            rotation={[0, Math.PI, 0]}
-                        >
-                            {planet.name}
-                        </Text>
+                        {!showOptions && (
+                            <Text
+                                position={[0, planet.size + 3 + (index * 1.5), 0]}
+                                fontSize={2.5}
+                                color="white"
+                                anchorX="center"
+                                anchorY="middle"
+                                rotation={[0.5, Math.PI, 0]}
+                            >
+                                {planet.description}
+                            </Text>
+                        )}
                     </>
+                )}
+
+                {showOptions && planet.name === 'Mercury' && (
+                    <Html position={[0, planet.size + 2, 0]}>
+                        <div className="bg-black/80 p-4 rounded-lg backdrop-blur-sm text-white min-w-[200px]">
+                            <button
+                                className="block w-full text-left px-4 py-2 hover:bg-white/20 rounded transition-colors mb-2"
+                                onClick={handleOptionClick('view')}
+                            >
+                                👁 View Resume
+                            </button>
+                            <button
+                                className="block w-full text-left px-4 py-2 hover:bg-white/20 rounded transition-colors mb-2"
+                                onClick={handleOptionClick('download')}
+                            >
+                                ⬇ Download Resume
+                            </button>
+                            <button
+                                className="block w-full text-left px-4 py-2 hover:bg-white/20 rounded transition-colors"
+                                onClick={handleOptionClick('navigate')}
+                            >
+                                View Journey
+                            </button>
+                        </div>
+                    </Html>
                 )}
 
                 {planet.name === 'Saturn' && <SaturnRings planetSize={planet.size} />}
