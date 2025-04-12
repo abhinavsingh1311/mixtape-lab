@@ -67,7 +67,7 @@ export default function Home() {
                 if (messageInterval) clearInterval(messageInterval);
             };
         }
-    }, [showIntro, ambientStarted, playAmbient]);
+    }, [showIntro, ambientStarted, playAmbient, stopAmbient]);
 
     const handlePortalClick = () => {
         setShowPortalMessage(false);
