@@ -9,12 +9,12 @@ interface MoonProps extends MoonData {
 }
 
 export const Moon: React.FC<MoonProps> = ({
-                                              parentSize,
-                                              texture,
-                                              size = parentSize * 0.2,
-                                              distance = parentSize * 2,
-                                              speed = 0.02
-                                          }) => {
+    parentSize,
+    texture,
+    size = parentSize * 0.2,
+    distance = parentSize * 2,
+    speed = 0.02
+}) => {
     const moonRef = useRef<THREE.Mesh>(null);
     const [moonTexture, setMoonTexture] = useState<THREE.Texture>(new THREE.TextureLoader().load('/images/fallback.png'));
     const [angle, setAngle] = useState(Math.random() * Math.PI * 2);

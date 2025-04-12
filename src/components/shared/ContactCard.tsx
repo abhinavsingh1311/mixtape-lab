@@ -8,11 +8,11 @@ interface ContactCardProps {
 }
 
 export const ContactCard: React.FC<ContactCardProps> = ({
-                                                            icon,
-                                                            label,
-                                                            value,
-                                                            href
-                                                        }) => (
+    icon,
+    label,
+    value,
+    href
+}) => (
     <motion.a
         href={href}
         target="_blank"

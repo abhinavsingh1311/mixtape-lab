@@ -16,6 +16,32 @@
   }
 }
 
+html,
+body {
+  overscroll-behavior-y: none;
+  /* Prevents pull-to-refresh on mobile */
+}
+
+@media (max-width: 640px) {
+  .prose h2 {
+    font-size: 1.5rem !important;
+  }
+
+  .prose p,
+  .prose li {
+    font-size: 0.95rem !important;
+  }
+}
+
+/* Improve touch targets on mobile */
+@media (max-width: 768px) {
+
+  button,
+  a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
 
 body {
   background-color: #0a0a0a;
@@ -35,19 +61,17 @@ canvas {
 }
 
 .bg-neon-gradient {
-  background: linear-gradient(
-          45deg,
-          rgba(14, 165, 233, 0.1) 0%,
-          rgba(124, 58, 237, 0.1) 50%,
-          rgba(239, 68, 68, 0.1) 100%
-  );
+  background: linear-gradient(45deg,
+      rgba(14, 165, 233, 0.1) 0%,
+      rgba(124, 58, 237, 0.1) 50%,
+      rgba(239, 68, 68, 0.1) 100%);
   z-index: 1;
 }
 
 .neon-text {
   text-shadow: 0 0 10px #00ffff,
-  0 0 20px #00ffff,
-  0 0 30px #00ffff;
+    0 0 20px #00ffff,
+    0 0 30px #00ffff;
   animation: neon-pulse 1.5s infinite alternate;
 }
 
@@ -58,11 +82,12 @@ canvas {
 @keyframes neon-pulse {
   from {
     text-shadow: 0 0 10px #00ffff,
-    0 0 20px #00ffff;
+      0 0 20px #00ffff;
   }
+
   to {
     text-shadow: 0 0 20px #00ffff,
-    0 0 30px #00ffff,
-    0 0 40px #00ffff;
+      0 0 30px #00ffff,
+      0 0 40px #00ffff;
   }
 }

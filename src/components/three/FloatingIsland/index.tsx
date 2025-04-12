@@ -2,11 +2,11 @@ import { GroupProps, useFrame } from '@react-three/fiber';
 import { useRef, useEffect } from 'react';
 import * as THREE from 'three';
 import { HologramSphere } from './components/HologramSphere';
-import {ScatteredRocks} from "@/components/three/FloatingIsland/components/ScatteredRocks";
-import {IslandBase} from "@/components/three/FloatingIsland/components/IslandBase";
-import {Portal} from "@/components/three/FloatingIsland/components/Portal";
-import {WelcomeText} from "@/components/three/FloatingIsland/components/Welcome";
-import {Tree} from "@/components/three/FloatingIsland/components/Tree";
+import { ScatteredRocks } from "@/components/three/FloatingIsland/components/ScatteredRocks";
+import { IslandBase } from "@/components/three/FloatingIsland/components/IslandBase";
+import { Portal } from "@/components/three/FloatingIsland/components/Portal";
+import { WelcomeText } from "@/components/three/FloatingIsland/components/Welcome";
+import { Tree } from "@/components/three/FloatingIsland/components/Tree";
 
 interface FloatingIslandProps extends GroupProps {
     onPortalClick: () => void;

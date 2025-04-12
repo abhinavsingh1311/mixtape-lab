@@ -1,5 +1,5 @@
 import { Vector3 } from 'three';
-import {PlanetSystem} from "@/components/three/SolarSystem/models/PlanetSystem";
+import { PlanetSystem } from "@/components/three/SolarSystem/models/PlanetSystem";
 
 export interface MoonData {
     texture: string;

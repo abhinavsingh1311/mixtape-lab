@@ -12,9 +12,12 @@ import { useRouter } from 'next/router';
 interface SolarSystemProps {
     cameraMode: CameraMode;
     setCameraMode: (mode: CameraMode) => void;
+    isMobile: boolean;
 }
 
-export default function SolarSystem({ cameraMode, setCameraMode }: SolarSystemProps) {
+export default function SolarSystem({ cameraMode,
+    setCameraMode,
+    isMobile }: SolarSystemProps) {
     const { camera } = useThree();
     const router = useRouter();
     const [targetPosition, setTargetPosition] = useState<THREE.Vector3 | null>(null);
@@ -22,8 +25,8 @@ export default function SolarSystem({ cameraMode, setCameraMode }: SolarSystemPr
 
     const planets = useMemo(() => [
         new PlanetSystem({
-            size: 1.5,
-            distance: 40,
+            size: isMobile ? 1.2 : 1.5,
+            distance: isMobile ? 30 : 40,
             speed: 0.001,
             name: 'Mercury',
             texture: '2k_mercury.jpg',
@@ -32,8 +35,8 @@ export default function SolarSystem({ cameraMode, setCameraMode }: SolarSystemPr
             description: 'Learn about my journey'
         }),
         new PlanetSystem({
-            size: 2.2,
-            distance: 60,
+            size: isMobile ? 1.8 : 2.2,
+            distance: isMobile ? 45 : 60,
             speed: 0.0008,
             name: 'Venus',
             texture: '2k_venus_surface.jpg',
@@ -42,8 +45,8 @@ export default function SolarSystem({ cameraMode, setCameraMode }: SolarSystemPr
             description: 'Explore my work'
         }),
         new PlanetSystem({
-            size: 2.5,
-            distance: 85,
+            size: isMobile ? 2.0 : 2.5,
+            distance: isMobile ? 65 : 85,
             speed: 0.0006,
             name: 'Earth',
             texture: 'earthmap1k.jpg',
@@ -55,8 +58,8 @@ export default function SolarSystem({ cameraMode, setCameraMode }: SolarSystemPr
             }]
         }),
         new PlanetSystem({
-            size: 2.2,
-            distance: 105,
+            size: isMobile ? 1.8 : 2.2,
+            distance: isMobile ? 85 : 105,
             speed: 0.0004,
             name: 'Mars',
             texture: '2k_mars.jpg',
@@ -65,8 +68,8 @@ export default function SolarSystem({ cameraMode, setCameraMode }: SolarSystemPr
             description: 'Professional journey'
         }),
         new PlanetSystem({
-            size: 4.5,
-            distance: 200,
+            size: isMobile ? 3.5 : 4.5,
+            distance: isMobile ? 150 : 200,
             speed: 0.0003,
             name: 'Jupiter',
             texture: 'jupitermap.jpg',
@@ -74,24 +77,25 @@ export default function SolarSystem({ cameraMode, setCameraMode }: SolarSystemPr
             description: 'Contact me'
         }),
         new PlanetSystem({
-            size: 4,
-            distance: 250,
+            size: isMobile ? 3.0 : 4.0,
+            distance: isMobile ? 190 : 250,
             speed: 0.0002,
             name: 'Saturn',
             texture: 'saturnmap.jpg',
             link: '/planets/saturn',
             description: 'Read my thoughts'
         })
-    ], []);
+    ], [isMobile]);
 
     useFrame(() => {
         if (cameraMode === 'locked' && targetPosition) {
+            // Adjust camera movement for mobile vs desktop
+            const targetX = targetPosition.x * (isMobile ? 2.0 : 2.5);
+            const targetY = targetPosition.y + (isMobile ? 20 : 25);
+            const targetZ = targetPosition.z * (isMobile ? 1.2 : 1.5);
+
             camera.position.lerp(
-                new THREE.Vector3(
-                    targetPosition.x * 2.5,
-                    targetPosition.y + 25,
-                    targetPosition.z * 1.5
-                ),
+                new THREE.Vector3(targetX, targetY, targetZ),
                 0.05
             );
             camera.lookAt(targetPosition);
@@ -121,10 +125,11 @@ export default function SolarSystem({ cameraMode, setCameraMode }: SolarSystemPr
                     planet={planet}
                     onClick={handlePlanetClick}
                     index={index}
+                    isMobile={isMobile}
                 />
             ))}
             <AsteroidBelt />
-            <Comet />
+            {!isMobile && <Comet />} {/* Disable comet on mobile for performance */}
             <ambientLight intensity={0.5} />
             <hemisphereLight
                 intensity={0.8}

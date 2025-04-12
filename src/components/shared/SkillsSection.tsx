@@ -23,7 +23,7 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills }) => (
                 <div className="flex flex-wrap gap-2">
                     {category.items.map((skill, skillIndex) => (
                         <span key={skillIndex}
-                              className="px-2 py-1 bg-gray-800 rounded-full text-sm">
+                            className="px-2 py-1 bg-gray-800 rounded-full text-sm">
                             {skill}
                         </span>
                     ))}

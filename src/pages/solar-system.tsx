@@ -1,23 +1,26 @@
+// src/pages/solar-system.tsx
 import { Suspense, useState, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
 import dynamic from 'next/dynamic';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { AlienClock } from "@/components/ui/AlienClock";
 import { useSound } from 'use-sound';
 import { Howler } from 'howler';
 import { LoadingScreen } from '@/components/solar-system/LoadingScreen';
-import { Navigation } from '@/components/solar-system/Navigation';
-import { NavigationGuide } from '@/components/solar-system/NavigationGuide';
-import { MobileWarning } from '@/components/solar-system/MobileWarning';
-import { SolarSystemScene } from '@/components/solar-system/SolarSystemScene';
+import { Stars } from '@react-three/drei';
 import type { CameraMode } from '@/components/three/SolarSystem/types';
 
+// Import responsive components
+import { SolarSystemScene } from '@/components/solar-system/SolarSystemScene';
+import { Navigation } from '@/components/solar-system/Navigation';
+import { ResponsiveGuide } from '@/components/solar-system/ResponsiveGuide';
+
 export default function SolarSystemPage() {
-    const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
     const [cameraMode, setCameraMode] = useState<CameraMode>('free');
     const [isMuted, setIsMuted] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
 
+    // Sound effects
     const [playSpaceAmbient, { stop: stopSpaceAmbient }] = useSound(
         '/sounds/ambient-space.mp3',
         {
@@ -27,6 +30,21 @@ export default function SolarSystemPage() {
         }
     );
 
+    // Detect mobile device on client side
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 768);
+        };
+
+        // Check on initial load
+        checkMobile();
+
+        // Check on resize
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
+    // Handle sounds
     useEffect(() => {
         playSpaceAmbient();
         return () => {
@@ -34,16 +52,10 @@ export default function SolarSystemPage() {
         };
     }, [playSpaceAmbient, stopSpaceAmbient]);
 
+    // Handle mute state
     useEffect(() => {
         Howler.volume(isMuted ? 0 : 1);
     }, [isMuted]);
-
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setCurrentTime(new Date().toLocaleTimeString());
-        }, 1000);
-        return () => clearInterval(timer);
-    }, []);
 
     return (
         <ErrorBoundary>
@@ -53,36 +65,43 @@ export default function SolarSystemPage() {
                     setCameraMode={setCameraMode}
                     isMuted={isMuted}
                     setIsMuted={setIsMuted}
+                    isMobile={isMobile}
                 />
-
-                <NavigationGuide />
-
-                <div className="fixed bottom-4 left-4 z-20 text-white">
-                    <h1 className="text-2xl mb-2">Abhinav Singh</h1>
-                    <div className="text-xl">
+                <ResponsiveGuide isMobile={isMobile} />
+                <div className={`fixed ${isMobile ? 'bottom-4 left-4 z-20' : 'bottom-4 left-4 z-20'} text-white`}>
+                    <h1 className={`${isMobile ? 'text-xl' : 'text-2xl'} mb-2`}>Abhinav Singh</h1>
+                    <div className={isMobile ? "scale-75 origin-left" : "text-xl"}>
                         <AlienClock />
                     </div>
                 </div>
-
                 <div className="absolute inset-0">
                     <Canvas
                         camera={{
                             position: [0, 50, 150],
-                            fov: 45,
+                            fov: isMobile ? 60 : 45, // Wider field of view on mobile
                             near: 0.1,
                             far: 3000
                         }}
+                        dpr={[1, isMobile ? 1.5 : 2]} // Lower resolution on mobile for performance
                     >
                         <Suspense fallback={<LoadingScreen />}>
+                            <Stars
+                                radius={500}
+                                depth={100}
+                                count={isMobile ? 5000 : 10000} // Fewer stars on mobile for performance
+                                factor={6}
+                                saturation={0}
+                                fade
+                                speed={1}
+                            />
                             <SolarSystemScene
                                 cameraMode={cameraMode}
                                 setCameraMode={setCameraMode}
+                                isMobile={isMobile}
                             />
                         </Suspense>
                     </Canvas>
                 </div>
-
-                <MobileWarning />
             </div>
         </ErrorBoundary>
     );

@@ -9,15 +9,16 @@ interface LayoutProps {
     description: string;
 }
 
+// In Layout.tsx
 export const Layout: React.FC<LayoutProps> = ({ children, color, title, description }) => (
     <div
-        className="min-h-screen text-white p-8"
+        className="min-h-screen text-white p-4 md:p-8"
         style={{ backgroundColor: `color-mix(in srgb, ${color} 10%, black)` }}
     >
-        <nav className="fixed top-4 right-4 z-50 flex gap-4">
+        <nav className="fixed top-4 right-4 z-50 flex gap-2 md:gap-4">
             <Link
                 href="/solar-system"
-                className="px-4 py-2 bg-gray-800 rounded hover:bg-gray-700 transition-colors"
+                className="px-3 py-2 md:px-4 md:py-2 bg-gray-800 rounded hover:bg-gray-700 transition-colors text-sm md:text-base"
             >
                 Back to Solar System
             </Link>
@@ -28,10 +29,11 @@ export const Layout: React.FC<LayoutProps> = ({ children, color, title, descript
             animate={{ opacity: 1, y: 0 }}
             className="max-w-4xl mx-auto pt-16"
         >
-            <h1 className="text-4xl font-bold mb-2" style={{ color }}>
+            <h1 className="text-3xl md:text-4xl font-bold mb-2" style={{ color }}>
                 {title}
             </h1>
-            <p className="text-xl text-gray-300 mb-8">{description}</p>
+            <p className="text-gray-400 mb-8 text-sm md:text-base">{description}</p>
+
             {children}
         </motion.div>
     </div>

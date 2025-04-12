@@ -1,5 +1,5 @@
 import { useRef, useEffect } from 'react';
-import {useFrame, useThree} from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 import { SpaceFogShader } from './SpaceFogShader';
 import { MovingStars } from './MovingStars';
@@ -17,7 +17,7 @@ export const IntroScene: React.FC<IntroSceneProps> = ({ onComplete, currentMessa
     const messageRef = useRef<HTMLDivElement>(null);
     const { camera } = useThree();
     const messages = [
-        "...Eerie Noise>>>>>.....",
+        "...Eerie Noise.....",
         "Wandering through the cosmic void...",
         "Something beckons in the distance...",
         "A mysterious portal appears...",

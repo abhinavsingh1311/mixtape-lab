@@ -2,20 +2,30 @@ import { useRef, useMemo, useEffect } from 'react';
 import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
 
+const PARTICLE_COUNT_DESKTOP = 1000;
+const PARTICLE_COUNT_MOBILE = 300;
 const PARTICLE_COUNT = 1000;
 
-export default function BackgroundParticles() {
-    const particlesRef = useRef<THREE.Points<THREE.BufferGeometry, THREE.Material | THREE.Material[]>>(null);
+// Define Props interface for the component
+interface BackgroundParticlesProps {
+    isMobile: boolean;
+}
+
+export default function BackgroundParticles({ isMobile }: BackgroundParticlesProps) {
+    // Use the correct ref type with proper generics
+    const particlesRef = useRef<THREE.Points>(null);
+
+    const particleCount = isMobile ? PARTICLE_COUNT_MOBILE : PARTICLE_COUNT_DESKTOP;
 
     const positions = useMemo(() => {
-        const pos = new Float32Array(PARTICLE_COUNT * 3);
-        for (let i = 0; i < PARTICLE_COUNT * 3; i += 3) {
+        const pos = new Float32Array(particleCount * 3);
+        for (let i = 0; i < particleCount * 3; i += 3) {
             pos[i] = (Math.random() - 0.5) * 100;
             pos[i + 1] = (Math.random() - 0.5) * 100;
             pos[i + 2] = (Math.random() - 0.5) * 100;
         }
         return pos;
-    }, []);
+    }, [particleCount]);
 
     useFrame(({ clock }) => {
         if (particlesRef.current) {
@@ -28,7 +38,7 @@ export default function BackgroundParticles() {
             <bufferGeometry>
                 <bufferAttribute
                     attach="attributes-position"
-                    count={PARTICLE_COUNT}
+                    count={particleCount}
                     itemSize={3}
                     array={positions}
                 />

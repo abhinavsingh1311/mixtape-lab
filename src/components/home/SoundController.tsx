@@ -12,14 +12,14 @@ interface SoundControllerProps {
 }
 
 export const SoundController: React.FC<SoundControllerProps> = ({
-                                                                    isMuted,
-                                                                    showIntro,
-                                                                    isIslandVisible,
-                                                                    stopAmbient,
-                                                                    playPortalHum,
-                                                                    ambientStarted,
-                                                                    playAmbient
-                                                                }) => {
+    isMuted,
+    showIntro,
+    isIslandVisible,
+    stopAmbient,
+    playPortalHum,
+    ambientStarted,
+    playAmbient
+}) => {
     // Handle muting
     useEffect(() => {
         Howler.volume(isMuted ? 0 : 1);

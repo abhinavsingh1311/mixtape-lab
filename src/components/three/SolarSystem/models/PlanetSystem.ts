@@ -1,4 +1,4 @@
-import {MoonData, PlanetSystemProps} from "@/components/three/SolarSystem/types";
+import { MoonData, PlanetSystemProps } from "@/components/three/SolarSystem/types";
 
 export class PlanetSystem {
     size: number;
@@ -13,16 +13,16 @@ export class PlanetSystem {
     moons?: MoonData[];
 
     constructor({
-                    size,
-                    distance,
-                    speed,
-                    name,
-                    link,
-                    texture,
-                    bumpMap,
-                    description = '',
-                    moons = []
-                }: PlanetSystemProps) {
+        size,
+        distance,
+        speed,
+        name,
+        link,
+        texture,
+        bumpMap,
+        description = '',
+        moons = []
+    }: PlanetSystemProps) {
         this.size = size;
         this.distance = distance;
         this.speed = speed;

@@ -9,12 +9,12 @@ interface ArticleProps {
 }
 
 export const ArticleCard: React.FC<ArticleProps> = ({
-                                                        title,
-                                                        excerpt,
-                                                        date,
-                                                        readTime,
-                                                        link
-                                                    }) => (
+    title,
+    excerpt,
+    date,
+    readTime,
+    link
+}) => (
     <motion.article
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

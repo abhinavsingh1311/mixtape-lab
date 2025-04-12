@@ -1,6 +1,6 @@
 import { Suspense, useState, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
-import {OrbitControls, PerspectiveCamera } from '@react-three/drei';
+import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
 import { BlendFunction } from 'postprocessing';
 import { useRouter } from 'next/router';
@@ -9,7 +9,7 @@ import * as THREE from 'three';
 import FloatingIsland from '@/components/three/FloatingIsland';
 import { ClosedSpaceScene } from '@/components/three/BackgroundElements/ClosedSpaceScene';
 import { AlienClock } from '@/components/ui/AlienClock';
-import {IntroScene} from '@/components/home/IntroScene';
+import { IntroScene } from '@/components/home/IntroScene';
 import { AutoTrackingSystem } from '@/components/home/AutoTracking';
 import { LoadingScreen } from '@/components/home/LoadingScreen';
 import { SoundController } from '@/components/home/SoundController';
@@ -30,7 +30,7 @@ export default function Home() {
         interrupt: true
     });
 
-    const [playPortalHum, {stop: stopPortal}] = useSound('/sounds/portal-open.mp3', {
+    const [playPortalHum, { stop: stopPortal }] = useSound('/sounds/portal-open.mp3', {
         volume: 0.2,
         loop: true,
         interrupt: true

@@ -9,12 +9,12 @@ interface ExperienceProps {
 }
 
 export const ExperienceCard: React.FC<ExperienceProps> = ({
-                                                              company,
-                                                              role,
-                                                              period,
-                                                              description,
-                                                              technologies
-                                                          }) => (
+    company,
+    role,
+    period,
+    description,
+    technologies
+}) => (
     <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
