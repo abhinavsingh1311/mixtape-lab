@@ -7,7 +7,6 @@ interface TreeProps {
 
 export const Tree: React.FC<TreeProps> = ({ position, scale = 1 }) => (
     <group position={position} scale={scale}>
-        {/* Trunk with bark texture effect */}
         <mesh castShadow position={[0, 0.4, 0]}>
             <cylinderGeometry args={[0.1, 0.15, 0.8, 8]} />
             <meshStandardMaterial
@@ -18,7 +17,6 @@ export const Tree: React.FC<TreeProps> = ({ position, scale = 1 }) => (
                 emissiveIntensity={0.2}
             />
         </mesh>
-        {/* Multiple layers of foliage for fuller look */}
         {[0.8, 1.1, 1.4, 1.7].map((height, i) => (
             <mesh key={i} castShadow position={[0, height, 0]}>
                 <coneGeometry args={[0.5 - i * 0.08, 0.6, 8]} />

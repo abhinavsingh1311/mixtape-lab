@@ -31,6 +31,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     return (
         <ErrorBoundary fallback={(error) => (
             <div className="fixed inset-0 flex items-center justify-center bg-black/80">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
                 <div className="bg-white p-8 rounded-lg max-w-2xl w-full text-center">
                     <h1 className="text-2xl font-bold text-red-600 mb-4">Something went wrong</h1>
                     <p className="text-gray-700">{error.message}</p>

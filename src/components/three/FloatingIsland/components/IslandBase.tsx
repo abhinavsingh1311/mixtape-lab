@@ -1,6 +1,5 @@
 export const IslandBase: React.FC = () => (
     <>
-        {/* Main island base */}
         <mesh castShadow receiveShadow position={[0, 0, 0]}>
             <cylinderGeometry args={[3, 3.5, 2, 40]} />
             <meshStandardMaterial
@@ -11,8 +10,6 @@ export const IslandBase: React.FC = () => (
                 emissiveIntensity={2}
             />
         </mesh>
-
-        {/* Topsoil layer */}
         <mesh castShadow position={[0, 1, 0]}>
             <cylinderGeometry args={[2.8, 3, 0.5, 32]} />
             <meshStandardMaterial

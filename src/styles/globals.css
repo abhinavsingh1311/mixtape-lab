@@ -16,11 +16,24 @@
   }
 }
 
+/* Add to your global CSS */
 html,
 body {
   overscroll-behavior-y: none;
-  /* Prevents pull-to-refresh on mobile */
+  position: relative;
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
+
+/* Ensure all content areas can scroll */
+.prose {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+
 
 @media (max-width: 640px) {
   .prose h2 {
@@ -46,7 +59,17 @@ body {
 body {
   background-color: #0a0a0a;
   margin: 0;
+  /* Remove overflow: hidden; completely */
+}
+
+/* And add this for body scrolling control: */
+body.no-scroll {
   overflow: hidden;
+}
+
+body.allow-scroll {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 canvas {
