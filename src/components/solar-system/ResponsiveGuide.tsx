@@ -39,6 +39,7 @@ export const ResponsiveGuide: React.FC<ResponsiveGuideProps> = ({ isMobile }) =>
                 <li>• {isMobile ? 'Drag' : 'Drag'} to rotate view</li>
                 <li>• {isMobile ? 'Pinch' : 'Scroll'} to zoom in/out</li>
                 <li>• {isMobile ? 'Tap and hold' : 'Hover'} for info</li>
+                <li>• Choose free camera option from the Navigation menu to move around the solar system freely!</li>
             </ul>
         </div>
     );

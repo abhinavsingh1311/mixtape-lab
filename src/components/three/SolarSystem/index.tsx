@@ -106,13 +106,16 @@ export default function SolarSystem({ cameraMode,
     });
 
     const handlePlanetClick = (route: string, position: THREE.Vector3) => {
-        if (cameraMode === 'locked') {
-            setCameraMode('free');
-            setTargetPosition(null);
-        } else {
+        router.push(route);
+
+        // If in free mode, switch to locked and set target position
+        if (cameraMode === 'free') {
             setCameraMode('locked');
             setTargetPosition(position);
-            router.push(route);
+        }
+        // If already in locked mode, just update the target position
+        else {
+            setTargetPosition(position);
         }
     };
 

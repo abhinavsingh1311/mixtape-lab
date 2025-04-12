@@ -16,9 +16,18 @@ import { Navigation } from '@/components/solar-system/Navigation';
 import { ResponsiveGuide } from '@/components/solar-system/ResponsiveGuide';
 
 export default function SolarSystemPage() {
-    const [cameraMode, setCameraMode] = useState<CameraMode>('free');
     const [isMuted, setIsMuted] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
+    const [cameraMode, setCameraMode] = useState<CameraMode>('locked');
+
+    useEffect(() => {
+        // Load saved camera mode when page loads
+        const savedMode = localStorage.getItem('cameraMode');
+        if (savedMode === 'free' || savedMode === 'locked') {
+            setCameraMode(savedMode as CameraMode);
+        }
+        localStorage.setItem('cameraMode', cameraMode);
+    }, []);
 
     // Sound effects
     const [playSpaceAmbient, { stop: stopSpaceAmbient }] = useSound(
