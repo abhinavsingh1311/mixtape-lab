@@ -1,4 +1,4 @@
-import { GroupProps, useFrame } from '@react-three/fiber';
+import { useFrame } from '@react-three/fiber';
 import { useRef, useEffect } from 'react';
 import * as THREE from 'three';
 import { HologramSphere } from './components/HologramSphere';
@@ -8,9 +8,14 @@ import { Portal } from "@/components/three/FloatingIsland/components/Portal";
 import { WelcomeText } from "@/components/three/FloatingIsland/components/Welcome";
 import { Tree } from "@/components/three/FloatingIsland/components/Tree";
 
-interface FloatingIslandProps extends GroupProps {
+
+interface FloatingIslandProps {
+    position?: [number, number, number] | THREE.Vector3;
+    scale?: [number, number, number] | THREE.Vector3 | number;
+    rotation?: [number, number, number] | THREE.Euler;
     onPortalClick: () => void;
     onLoad: () => void;
+    [key: string]: any;
 }
 
 export default function FloatingIsland({ onPortalClick, onLoad, ...props }: FloatingIslandProps) {

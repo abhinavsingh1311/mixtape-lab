@@ -4,7 +4,6 @@ import { useFrame } from '@react-three/fiber';
 
 const PARTICLE_COUNT_DESKTOP = 1000;
 const PARTICLE_COUNT_MOBILE = 300;
-const PARTICLE_COUNT = 1000;
 
 // Define Props interface for the component
 interface BackgroundParticlesProps {
@@ -38,9 +37,7 @@ export default function BackgroundParticles({ isMobile }: BackgroundParticlesPro
             <bufferGeometry>
                 <bufferAttribute
                     attach="attributes-position"
-                    count={particleCount}
-                    itemSize={3}
-                    array={positions}
+                    args={[positions, 3]}  // Use args property instead of count and itemSize
                 />
             </bufferGeometry>
             <pointsMaterial

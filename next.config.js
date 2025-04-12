@@ -1,14 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: true,
-    typescript: {
-        ignoreBuildErrors: false,
-    },
+    // typescript: {
+    //     ignoreBuildErrors: true,
+    // },
     output: 'standalone',
     images: {
         unoptimized: true
     },
     webpack: (config) => {
+        // Handle glb/gltf files
         config.module.rules.push({
             test: /\.(glb|gltf)$/,
             type: 'asset/resource',
@@ -16,6 +17,7 @@ const nextConfig = {
                 filename: 'static/models/[hash][ext]'
             }
         });
+
         return config;
     },
     async rewrites() {
@@ -28,4 +30,4 @@ const nextConfig = {
     }
 };
 
-export default nextConfig;
+module.exports = nextConfig;

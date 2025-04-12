@@ -1,14 +1,14 @@
 // components/three/CanvasWrapper.tsx
-import { Canvas, Props as CanvasProps, RootState } from '@react-three/fiber';
+import { Canvas, RootState } from '@react-three/fiber';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import { WebGLContextHandler } from './WebGlContextHandler';
 import { ReactNode } from 'react';
 import * as THREE from 'three';
 
-interface CanvasWrapperProps extends Omit<CanvasProps, 'children'> {
+interface CanvasWrapperProps {
     children: ReactNode;
+    [key: string]: any;
 }
-
 export function CanvasWrapper({ children, ...props }: CanvasWrapperProps) {
     return (
         <ErrorBoundary
