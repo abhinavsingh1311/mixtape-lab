@@ -7,6 +7,7 @@ export const NavigationGuide = () => {
                 <li>• Drag to rotate view</li>
                 <li>• Scroll to zoom in/out</li>
                 <li>• Hover over planets for info</li>
+                <li>• Choose free camera option from the Navigation menu to move around the solar system freely!</li>
             </ul>
         </div>
     );

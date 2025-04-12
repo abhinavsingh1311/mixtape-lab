@@ -23,7 +23,7 @@
     "next": "^14.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "three": "^0.153.0",
+    "three": "^0.149.0",
     "three-mesh-bvh": "^0.8.0",
     "three-stdlib": "^2.35.15",
     "use-sound": "^4.0.3"

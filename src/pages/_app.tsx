@@ -5,8 +5,8 @@ import { AnimatePresence } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import { useEffect, useState } from 'react';
+import '../../src/utils/three-shader-fix';
 
-// In _app.tsx
 function MyApp({ Component, pageProps }: AppProps) {
     const [isMobile, setIsMobile] = useState(false);
 
