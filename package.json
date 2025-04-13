@@ -12,7 +12,7 @@
     "@gltf-transform/cli": "^4.1.1",
     "@next/font": "^14.2.15",
     "@react-three/drei": "^9.80.0",
-    "@react-three/fiber": "^8.13.0",
+    "@react-three/fiber": "^9.1.2",
     "@react-three/postprocessing": "^2.14.0",
     "@types/howler": "^2.2.12",
     "framer-motion": "^10.16.4",
