@@ -1,5 +1,4 @@
-// src/components/ui/AlienClock.tsx
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
 // Convert decimal to base-12 (dozenal)
@@ -13,7 +12,7 @@ const toDozenal = (num: number): string => {
         num = Math.floor(num / 12);
     } while (num > 0);
 
-    return result;
+    return result || '0'; // Return '0' for zero value
 };
 
 // Custom time format for alien representation
@@ -37,101 +36,104 @@ const getAlienTime = () => {
     };
 };
 
-interface GlyphProps {
-    value: string;
-    pulse?: boolean;
-}
+export const AlienClock: React.FC = () => {
+    const [time, setTime] = useState(getAlienTime());
+    const [showLabels, setShowLabels] = useState(false);
 
-const Glyph: React.FC<GlyphProps> = ({ value, pulse }) => (
-    <motion.div
-        className="relative w-8 h-12 flex items-center justify-center"
-        animate={pulse ? {
-            opacity: [1, 0.5, 1],
-            scale: [1, 1.1, 1]
-        } : {}}
-        transition={{ duration: 1, repeat: Infinity }}
-    >
-        <div className="absolute inset-0 bg-blue-500/20 rounded" />
-        <span className="text-2xl font-alien text-blue-300">
-            {value}
-        </span>
-    </motion.div>
-);
+    useEffect(() => {
+        // Update time every second
+        const interval = setInterval(() => {
+            setTime(getAlienTime());
+        }, 1000);
 
-const OrbitalIndicator: React.FC<{ value: number }> = ({ value }) => {
-    const segments = 12;
-    const radius = 20;
+        // Clean up
+        return () => clearInterval(interval);
+    }, []);
 
     return (
-        <div className="relative w-12 h-12">
-            <svg viewBox="-24 -24 48 48">
-                {Array.from({ length: segments }).map((_, i) => {
-                    const angle = (i * 2 * Math.PI) / segments;
-                    const x = Math.cos(angle) * radius;
-                    const y = Math.sin(angle) * radius;
-                    return (
-                        <circle
-                            key={i}
-                            cx={x}
-                            cy={y}
-                            r={1.5}
-                            fill={i === value ? '#60A5FA' : '#1E3A8A'}
-                        />
-                    );
-                })}
-            </svg>
+        <div className="fixed bottom-16 sm:bottom-auto sm:top-4 left-0 right-0 sm:right-auto z-50 flex items-center justify-center sm:justify-start pointer-events-auto">
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="bg-black/70 backdrop-blur-md rounded-lg px-3 py-2 mx-auto sm:ml-4 sm:mr-0 shadow-lg"
+                onClick={() => setShowLabels(!showLabels)}
+            >
+                <div
+                    className="flex flex-row items-center gap-3 text-xs sm:text-sm overflow-x-auto"
+                    style={{
+                        fontFamily: 'Starjedi, monospace',
+                        scrollbarWidth: 'none'
+                    }}
+                >
+                    <TimeUnit
+                        label="ST"
+                        fullName="STELLAR CYCLE"
+                        value={time.stellar.toString()}
+                        showFullName={showLabels}
+                    />
+                    <TimeUnit
+                        label="OR"
+                        fullName="ORBITAL PHASE"
+                        value={(time.orbital + 1).toString()}
+                        showFullName={showLabels}
+                    />
+                    <TimeUnit
+                        label="RT"
+                        fullName="ROTATION"
+                        value={time.dozenal.rotation}
+                        showFullName={showLabels}
+                    />
+                    <TimeUnit
+                        label="SG"
+                        fullName="SEGMENT"
+                        value={time.dozenal.segment}
+                        showFullName={showLabels}
+                    />
+                    <TimeUnit
+                        label="PL"
+                        fullName="PULSE"
+                        value={time.dozenal.pulse}
+                        pulse={true}
+                        showFullName={showLabels}
+                    />
+                </div>
+            </motion.div>
         </div>
     );
 };
 
-export const AlienClock: React.FC = () => {
-    const [time, setTime] = useState(getAlienTime());
-    const frameRef = useRef<number>();
+interface TimeUnitProps {
+    label: string;
+    fullName: string;
+    value: string;
+    pulse?: boolean;
+    showFullName?: boolean;
+}
 
-    useEffect(() => {
-        const updateTime = () => {
-            setTime(getAlienTime());
-            frameRef.current = requestAnimationFrame(updateTime);
-        };
-
-        frameRef.current = requestAnimationFrame(updateTime);
-
-        return () => {
-            if (frameRef.current) {
-                cancelAnimationFrame(frameRef.current);
-            }
-        };
-    }, []);
-
-    return (
-        <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="fixed top-4 left-4 bg-gray-900/80 backdrop-blur-sm rounded-lg p-4 z-50"
-        >
-            <div className="flex items-center gap-4">
-                <div className="flex flex-col items-center">
-                    <span className="text-xs text-blue-400 uppercase tracking-wider mb-1">
-                        Stellar Cycle
-                    </span>
-                    <Glyph value={toDozenal(time.stellar)} />
-                </div>
-
-                <div className="flex flex-col items-center">
-                    <span className="text-xs text-blue-400 uppercase tracking-wider mb-1">
-                        Orbital Phase
-                    </span>
-                    <OrbitalIndicator value={time.orbital} />
-                </div>
-
-                <div className="flex gap-1">
-                    <Glyph value={time.dozenal.rotation} />
-                    <span className="text-blue-500 self-center">:</span>
-                    <Glyph value={time.dozenal.segment} />
-                    <span className="text-blue-500 self-center">:</span>
-                    <Glyph value={time.dozenal.pulse} pulse />
-                </div>
-            </div>
-        </motion.div>
-    );
-};
+const TimeUnit: React.FC<TimeUnitProps> = ({ label, fullName, value, pulse = false, showFullName = false }) => (
+    <div className="flex flex-col items-center whitespace-nowrap">
+        {showFullName && (
+            <span className="text-gray-400 text-[0.6rem] mb-1">{fullName}</span>
+        )}
+        <div className="flex items-center">
+            <span className="text-gray-400">{label}:</span>
+            {pulse ? (
+                <motion.span
+                    animate={{ opacity: [1, 0.5, 1] }}
+                    transition={{ duration: 1, repeat: Infinity }}
+                    className="ml-1 text-neon-blue"
+                    style={{ textShadow: '0 0 5px #00ffff, 0 0 10px #00ffff' }}
+                >
+                    {value}
+                </motion.span>
+            ) : (
+                <span
+                    className="ml-1 text-neon-blue"
+                    style={{ textShadow: '0 0 5px #00ffff, 0 0 10px #00ffff' }}
+                >
+                    {value}
+                </span>
+            )}
+        </div>
+    </div>
+);

@@ -82,6 +82,12 @@ body.no-scroll {
   overflow: hidden;
 }
 
+/* Hide scrollbar for the clock component */
+.overflow-x-auto::-webkit-scrollbar {
+  display: none;
+}
+
+
 body.allow-scroll {
   overflow: auto;
   -webkit-overflow-scrolling: touch;
