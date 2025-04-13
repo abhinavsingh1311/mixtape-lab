@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Add to your globals.css */
 @font-face {
   font-family: 'Starjedi';
   src: url('/Starjedi.ttf') format('truetype');
@@ -10,9 +11,23 @@
   font-display: swap;
 }
 
+/* Import a more readable font */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
 @layer base {
   html {
     font-family: 'Starjedi', system-ui, sans-serif;
+  }
+
+  div.planet-content {
+    font-family: 'Space Grotesk', sans-serif !important;
+  }
+
+  .planet-content p,
+  .planet-content span,
+  .planet-content div,
+  .planet-content li {
+    font-family: 'Space Grotesk', sans-serif !important;
   }
 }
 

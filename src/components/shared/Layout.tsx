@@ -2,6 +2,7 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ReactNode, useEffect } from 'react';
+import { spaceGrotesk } from '@/utils/fonts';
 
 interface LayoutProps {
     children: ReactNode;
@@ -11,13 +12,10 @@ interface LayoutProps {
 }
 
 export const Layout: React.FC<LayoutProps> = ({ children, color, title, description }) => {
-    // Add body class when the component mounts
     useEffect(() => {
-        // Enable scrolling on the planet pages
         document.body.classList.add('allow-scroll');
         document.body.classList.remove('no-scroll');
 
-        // Clean up when component unmounts
         return () => {
             document.body.classList.remove('allow-scroll');
         };
@@ -25,7 +23,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, color, title, descript
 
     return (
         <div
-            className="min-h-screen text-white p-4 md:p-8 overflow-auto"
+            className={`min-h-screen text-white p-4 md:p-8 overflow-auto ${spaceGrotesk.className}`}
             style={{ backgroundColor: `color-mix(in srgb, ${color} 10%, black)` }}
         >
             <nav className="fixed top-4 right-4 z-50 flex gap-2 md:gap-4">
@@ -42,7 +40,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, color, title, descript
                 animate={{ opacity: 1, y: 0 }}
                 className="max-w-4xl mx-auto pt-16 pb-20"
             >
-                <h1 className="text-3xl md:text-4xl font-bold mb-2" style={{ color }}>
+                <h1 className="text-3xl md:text-4xl font-bold mb-2 font-starjedi" style={{ color }}>
                     {title}
                 </h1>
                 <p className="text-gray-400 mb-8">{description}</p>

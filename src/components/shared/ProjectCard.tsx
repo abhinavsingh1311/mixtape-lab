@@ -8,7 +8,6 @@ interface ProjectCardProps {
     link: string;
 }
 
-
 export default function ProjectCard({ title, description, imageUrl, link }: ProjectCardProps) {
     return (
         <motion.div
@@ -16,12 +15,15 @@ export default function ProjectCard({ title, description, imageUrl, link }: Proj
             whileHover={{ scale: 1.03 }}
             transition={{ duration: 0.2 }}
         >
-            <div className="relative h-40 md:h-48 w-full">
+            <div className="relative w-full aspect-[16/9]"> {/* Using aspect ratio */}
                 <Image
                     src={imageUrl}
                     alt={title}
                     fill
-                    style={{ objectFit: 'cover' }}
+                    style={{
+                        objectFit: 'cover',
+                        objectPosition: 'center top' // Focus on top to prevent face cropping
+                    }}
                     sizes="(max-width: 640px) 90vw, (max-width: 768px) 45vw, 33vw"
                     priority={false}
                 />

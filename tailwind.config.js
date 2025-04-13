@@ -11,6 +11,10 @@ module.exports = {
         'neon-blue': '#00f3ff',
         'neon-cyan': '#00ffff',
       },
+      fontFamily: {
+        starjedi: ['Starjedi', 'sans-serif'],
+        spaceGrotesk: ['Space Grotesk', 'sans-serif'],
+      },
     },
   },
   plugins: [],

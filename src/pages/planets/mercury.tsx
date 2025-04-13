@@ -1,5 +1,6 @@
 import { Layout } from '@/components/shared/Layout';
 import { FileText, Download } from 'lucide-react';
+import Image from 'next/image';
 
 export default function MercuryPage() {
     return (
@@ -29,21 +30,124 @@ export default function MercuryPage() {
                         </a>
                     </div>
 
-                    <h2 className="text-2xl font-bold mb-6">Education</h2>
-                    <div className="bg-gray-900 rounded-lg p-6 mb-6">
-                        <h3 className="text-xl font-bold">DMIT: Computer Software Dev. Diploma</h3>
-                        <div className="text-gray-400 mb-2">Northern Alberta Institute of Technology (NAIT) | 2023-2024</div>
-                        <ul className="list-disc list-inside text-gray-300">
-                            <li>Graduated with 4.0 CGPA</li>
-                            <li>Dean honor roll</li>
-                            <li>Specialized in full-stack development</li>
-                        </ul>
+                    <div className="flex flex-col-reverse md:flex-row gap-6 mb-8">
+                        <div className="md:w-2/3">
+                            <p className="text-lg mb-6">
+                                My journey into the world of technology began with a fascination for how things work. From a young age,
+                                I was captivated by the possibilities of what could be created through code. This curiosity led me
+                                to explore programming as more than just a skill—it became my passion.
+                            </p>
+
+                            <p className="text-lg">
+                                After completing my high school education at Shemrock Senior Secondary School in India in 2021,
+                                I decided to pursue my dream of becoming a software developer. This led me to Edmonton, Alberta,
+                                where I enrolled in the Computer Software Development program at the Northern Alberta Institute of Technology (NAIT).
+                            </p>
+                        </div>
+                        <div className="md:w-1/3 relative">
+                            <div className="w-full h-60 md:h-80 relative overflow-hidden rounded-lg">
+                                <Image
+                                    src="/images/early-days.jpg"
+                                    alt="My early days in technology"
+                                    fill
+                                    style={{
+                                        objectFit: 'contain',
+                                        backgroundColor: '#111111'
+                                    }}
+                                    sizes="(max-width: 768px) 100vw, 50vw"
+                                />
+                            </div>
+                        </div>
+
+
+
                     </div>
 
-                    <div className="bg-gray-900 rounded-lg p-6">
-                        <h3 className="text-xl font-bold">High School Diploma CBSE</h3>
-                        <div className="text-gray-400 mb-2">Shemrock Sen. Sec. School | 2021</div>
+                    <h2 className="text-2xl font-bold mb-6">Education</h2>
+                    <div className="flex flex-col md:flex-row gap-6 mb-6">
+                        <div className="md:w-1/4 relative h-48 md:h-auto">
+                            <Image
+                                src="/images/nait-logo.jpg"
+                                alt="NAIT logo"
+                                fill
+                                className="object-cover rounded-lg"
+                                sizes="(max-width: 768px) 100vw, 33vw"
+                            />
+                        </div>
+                        <div className="md:w-3/4 bg-gray-900 rounded-lg p-6">
+                            <h3 className="text-xl font-bold">DMIT: Computer Software Dev. Diploma</h3>
+                            <div className="text-gray-400 mb-2">Northern Alberta Institute of Technology (NAIT) | 2023-2024</div>
+                            <ul className="list-disc list-inside text-gray-300">
+                                <li>Graduated with perfect 4.0 CGPA</li>
+                                <li>Earned a place on the Dean&apos;s Honor Roll</li>
+                                <li>Specialized in full-stack development with React, ASP.NET, and Three.js</li>
+                                <li>Led a capstone project that was delivered two weeks ahead of schedule</li>
+                            </ul>
+                        </div>
                     </div>
+
+                    <h2 className="text-2xl font-bold mb-6">My Path to Development</h2>
+
+                    <div className="md:w-1/3 relative">
+                        <div className="w-full h-60 md:h-80 relative overflow-hidden rounded-lg">
+                            <Image
+                                src="/images/coding-journey.jpg"
+                                alt="My development journey"
+                                fill
+                                style={{
+                                    objectFit: 'contain',
+                                    backgroundColor: '#111111'
+                                }}
+                                sizes="(max-width: 768px) 100vw, 50vw"
+                            />
+                        </div>
+                        <div className="md:w-2/3 bg-gray-900/50 rounded-lg p-6">
+                            <p className="mb-4">
+                                At NAIT, I discovered my aptitude for both frontend and backend technologies. I became particularly
+                                interested in creating visually stunning interfaces while ensuring robust underlying systems.
+                            </p>
+
+                            <p className="mb-4">
+                                My dedication to excellence helped me master technologies like React, ASP.NET Core, and Three.js,
+                                along with database systems including PostgreSQL and MSSQL. I am especially proud of my work
+                                optimizing database schemas and implementing secure authentication systems.
+                            </p>
+
+                            <p>
+                                My capstone project was a defining moment in my educational journey. Working as a full-stack developer,
+                                I reduced data processing time by 40% through optimized database structures and built intuitive interfaces
+                                that accelerated workflows by 35%. These achievements, along with implementing robust security measures,
+                                allowed us to deliver the project two weeks ahead of schedule with an A+ grade.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="md:w-1/3 relative">
+                        <div className="w-full h-60 md:h-80 relative overflow-hidden rounded-lg">
+                            <Image
+                                src="/images/portfolio-dev.gif"
+                                alt="Working on portfolio"
+                                fill
+                                style={{
+                                    objectFit: 'contain',
+                                    backgroundColor: '#111111'
+                                }}
+                                sizes="(max-width: 768px) 100vw, 50vw"
+                            />
+                        </div>
+                    </div>
+
+                    <p className="text-lg mb-6">
+                        Today, I continue to push the boundaries of what is possible with web technologies. My recent work on this
+                        interactive 3D portfolio showcases my ability to create immersive digital experiences while maintaining
+                        high performance through techniques like geometry instancing and shader-based optimizations.
+                    </p>
+
+                    <p className="text-lg">
+                        I am fluent in English, Punjabi (my native language), and Hindi, which helps me connect with diverse teams
+                        and collaborate effectively. I am excited to continue growing as a developer and creating solutions that
+                        make a difference.
+                    </p>
                 </section>
             </div>
         </Layout>
