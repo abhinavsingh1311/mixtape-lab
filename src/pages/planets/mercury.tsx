@@ -88,20 +88,21 @@ export default function MercuryPage() {
 
                     <h2 className="text-2xl font-bold mb-6">My Path to Development</h2>
 
-                    <div className="md:w-1/3 relative">
-                        <div className="w-full h-60 md:h-80 relative overflow-hidden rounded-lg">
+                    <div className="flex flex-col md:w-auto relative justify-center items-center">
+                        <div className="w-80 h-60 md:h-80 relative overflow-hidden rounded-lg">
                             <Image
                                 src="/images/coding-journey.jpg"
                                 alt="My development journey"
                                 fill
                                 style={{
-                                    objectFit: 'contain',
-                                    backgroundColor: '#111111'
+                                    objectFit: 'cover',
+                                    backgroundColor: '#111111',
+                                    objectPosition: '50% 71%'
                                 }}
                                 sizes="(max-width: 768px) 100vw, 50vw"
                             />
                         </div>
-                        <div className="md:w-2/3 bg-gray-900/50 rounded-lg p-6">
+                        <div className="md:w-auto bg-gray-900/50 rounded-lg p-6 mt-4">
                             <p className="mb-4">
                                 At NAIT, I discovered my aptitude for both frontend and backend technologies. I became particularly
                                 interested in creating visually stunning interfaces while ensuring robust underlying systems.
@@ -122,7 +123,7 @@ export default function MercuryPage() {
                         </div>
                     </div>
 
-                    <div className="md:w-1/3 relative">
+                    <div className="md:w-auto relative mt-6">
                         <div className="w-full h-60 md:h-80 relative overflow-hidden rounded-lg">
                             <Image
                                 src="/images/portfolio-dev.gif"
@@ -137,7 +138,7 @@ export default function MercuryPage() {
                         </div>
                     </div>
 
-                    <p className="text-lg mb-6">
+                    <p className="text-lg mb-6 mt-6">
                         Today, I continue to push the boundaries of what is possible with web technologies. My recent work on this
                         interactive 3D portfolio showcases my ability to create immersive digital experiences while maintaining
                         high performance through techniques like geometry instancing and shader-based optimizations.
