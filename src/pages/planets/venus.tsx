@@ -15,6 +15,18 @@ export default function VenusPage() {
             imageUrl: "/projects/capstone.png",
             link: "https://certifiedorigins.space"
         },
+        {
+            title: "Resume scanner and Analysis using AI",
+            description: "Comprehensive extraction, parsing and analysis system that provides score as per ATS and job recommnedations as per the resume",
+            imageUrl: "/projects/resumeAI.png",
+            link: "https://projects-brown-alpha.vercel.app/"
+        },
+        {
+            title: "Plant Care Mobile Application",
+            description: "Comprehensive application to ensure plants get the care they deserve , built using flutter and firebase",
+            imageUrl: "/projects/projects.png",
+            link: "https://github.com/abhinavsingh1311/plant_mobile_app.git"
+        }
 
     ];
 

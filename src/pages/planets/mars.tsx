@@ -5,9 +5,9 @@ import Image from 'next/image';
 export default function MarsPage() {
     const experiences = [
         {
-            company: "DMIT CSD Capstone Project",
+            company: "Society For AI Literacy (SAIL)",
             role: "Full Stack Developer",
-            period: "September 2024 - December 2024",
+            period: "May 2025 - August 2025",
             description: [
                 "Reduced data processing time by 40% through optimized PostgreSQL schema and efficient data pipelines",
                 "Enhanced security by 85% implementing JWT tokenization and role-based access control",
@@ -15,6 +15,22 @@ export default function MarsPage() {
                 "Delivered project 2 weeks ahead of schedule with an A+ grade"
             ],
             technologies: ["React", "PostgreSQL", "Supabase", "Digital Ocean", "JWT", "REST APIs"]
+        },
+        {
+            company: "DMIT CSD Capstone Project",
+            role: "Full Stack Developer",
+            period: "September 2024 - December 2024",
+            description: [
+                "Built full-stack data collection system using JavaScript, TypeScript, and Python, improving data processing efficiency by 25%",
+                "Integrated OpenAI API with structured prompt engineering, achieving 90%+ accuracy in automated medical data extraction",
+                "Developed RESTful APIs using JSON Server backend, reducing manual processing time from 4 hours to 45 minutes per batch",
+                "Redesigned React frontend with modern UI/UX principles, increasing user engagement by 40% based on analytics metrics",
+                "Implemented Supabase database integration for real-time data synchronization and secure user authentication",
+                "Collaborated with cross-functional team using Agile methodology, participating in daily standups and 2-week sprint cycles",
+                "Wrote comprehensive technical documentation and conducted code reviews to maintain code quality standards",
+                "Debugged and resolved 50+ production issues, improving system reliability and reducing downtime by 30%"
+            ],
+            technologies: ["Express.js", "PostgreSQL", "Supabase", "Next.js", "Python", "REST APIs", "OpenAI API"]
         }
     ];
 
