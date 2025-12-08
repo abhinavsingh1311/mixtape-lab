@@ -48,19 +48,19 @@ export default function Home() {
             const timer = setTimeout(() => {
                 messageInterval = setInterval(() => {
                     setCurrentMessage(prev => {
-                        if (prev >= 3) {
+                        if (prev > 2) {
                             clearInterval(messageInterval);
                             setTimeout(() => {
                                 setShowIntro(false);
                                 setIsIslandVisible(true);
                                 stopAmbient();
-                            }, 1500);
+                            }, 0);
                             return prev;
                         }
                         return prev + 1;
                     });
-                }, 3000);
-            }, 100);
+                }, 0);
+            }, 0);
 
             return () => {
                 clearTimeout(timer);
