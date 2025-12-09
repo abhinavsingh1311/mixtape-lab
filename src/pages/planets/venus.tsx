@@ -3,6 +3,14 @@ import ProjectCard from '@/components/shared/ProjectCard';
 
 export default function VenusPage() {
     const projects = [
+
+        {
+            title: "Mixtape card generator",
+            description: "Users paste Spotify links and generate a shareable mixtape card.",
+            imageUrl: "/projects/mixtape.png",
+            link: "https://somemixtapes.com"
+        },
+
         {
             title: "Projects",
             description: "I have added all of my projects in this github repository. Take a look at those by clicking the link!",
