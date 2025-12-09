@@ -13,6 +13,7 @@ import { IntroScene } from '@/components/home/IntroScene';
 import { AutoTrackingSystem } from '@/components/home/AutoTracking';
 import { LoadingScreen } from '@/components/home/LoadingScreen';
 import { SoundController } from '@/components/home/SoundController';
+import Head from 'next/head';
 
 export default function Home() {
     const [cameraMode, setCameraMode] = useState<'free' | 'tracking'>('tracking');
@@ -85,116 +86,128 @@ export default function Home() {
     };
 
     return (
-        <div className="h-screen w-screen relative bg-black">
-            <div
-                className={`fixed inset-0 bg-black z-50 transition-opacity duration-1000 pointer-events-none
+        <>
+            <Head>
+                <script async src="https://www.googletagmanager.com/gtag/js?id=G-5R3TT33HR4"></script>
+                <script>
+                    {`window.dataLayer = window.dataLayer || [];
+                    function gtag(){dataLayer.push(arguments);}
+                    gtag('js', new Date());
+                    gtag('config', 'G-5R3TT33HR4');`}
+                </script>
+            </Head>
+
+            <div className="h-screen w-screen relative bg-black">
+                <div
+                    className={`fixed inset-0 bg-black z-50 transition-opacity duration-1000 pointer-events-none
                 ${showIntro ? 'opacity-0' : isIslandVisible ? 'opacity-0' : 'opacity-100'}`}
-            />
+                />
 
-            {isIslandVisible && <AlienClock />}
+                {isIslandVisible && <AlienClock />}
 
-            {isIslandVisible && (
-                <div className="fixed top-4 right-4 z-50 flex gap-2">
-                    <button
-                        className="bg-gray-800 text-white px-4 py-2 font-sans rounded-lg hover:bg-gray-700"
-                        onClick={() => setIsMuted(!isMuted)}
-                    >
-                        {isMuted ? '🔇' : '🔊'}
-                    </button>
-                    <button
-                        className="bg-gray-800 text-white px-4 py-2 font-sans rounded-lg hover:bg-gray-700"
-                        onClick={() => setCameraMode(prev => prev === 'free' ? 'tracking' : 'free')}
-                    >
-                        {cameraMode === 'free' ? 'Lock' : 'Free'}
-                    </button>
-                </div>
-            )}
+                {isIslandVisible && (
+                    <div className="fixed top-4 right-4 z-50 flex gap-2">
+                        <button
+                            className="bg-gray-800 text-white px-4 py-2 font-sans rounded-lg hover:bg-gray-700"
+                            onClick={() => setIsMuted(!isMuted)}
+                        >
+                            {isMuted ? '🔇' : '🔊'}
+                        </button>
+                        <button
+                            className="bg-gray-800 text-white px-4 py-2 font-sans rounded-lg hover:bg-gray-700"
+                            onClick={() => setCameraMode(prev => prev === 'free' ? 'tracking' : 'free')}
+                        >
+                            {cameraMode === 'free' ? 'Lock' : 'Free'}
+                        </button>
+                    </div>
+                )}
 
-            <SoundController
-                isMuted={isMuted}
-                showIntro={showIntro}
-                isIslandVisible={isIslandVisible}
-                stopAmbient={stopAmbient}
-                playPortalHum={playPortalHum}
-                ambientStarted={ambientStarted}
-                playAmbient={startAmbient}
-            />
+                <SoundController
+                    isMuted={isMuted}
+                    showIntro={showIntro}
+                    isIslandVisible={isIslandVisible}
+                    stopAmbient={stopAmbient}
+                    playPortalHum={playPortalHum}
+                    ambientStarted={ambientStarted}
+                    playAmbient={startAmbient}
+                />
 
-            <Canvas
-                shadows
-                gl={{
-                    antialias: true,
-                    toneMapping: THREE.ACESFilmicToneMapping,
-                    toneMappingExposure: 1.5
-                }}
-            >
-                <color attach="background" args={['#000000']} />
-                <Suspense fallback={<LoadingScreen />}>
-                    {showIntro ? (
-                        <IntroScene
-                            onComplete={() => setShowIntro(false)}
-                            currentMessage={currentMessage}
+                <Canvas
+                    shadows
+                    gl={{
+                        antialias: true,
+                        toneMapping: THREE.ACESFilmicToneMapping,
+                        toneMappingExposure: 1.5
+                    }}
+                >
+                    <color attach="background" args={['#000000']} />
+                    <Suspense fallback={<LoadingScreen />}>
+                        {showIntro ? (
+                            <IntroScene
+                                onComplete={() => setShowIntro(false)}
+                                currentMessage={currentMessage}
+                            />
+                        ) : (
+                            <>
+                                <EffectComposer>
+                                    <Bloom
+                                        blendFunction={BlendFunction.ADD}
+                                        mipmapBlur
+                                        luminanceSmoothing={0}
+                                        intensity={1.5}
+                                    />
+                                </EffectComposer>
+
+                                <ClosedSpaceScene />
+                                {isIslandVisible && (
+                                    <FloatingIsland
+                                        position={[0, -2, 0]}
+                                        scale={[0.5, 0.5, 0.5]}
+                                        onPortalClick={handlePortalClick}
+                                        onLoad={() => console.log('Island loaded')}
+                                    />
+                                )}
+
+                                <ambientLight intensity={0.5} />
+                                <pointLight
+                                    position={[10, 10, 10]}
+                                    intensity={1}
+                                    castShadow
+                                />
+                                <hemisphereLight
+                                    intensity={0.3}
+                                    color="#ffffff"
+                                    groundColor="#000000"
+                                />
+
+                                {cameraMode === 'free' ? (
+                                    <OrbitControls
+                                        enableDamping
+                                        dampingFactor={0.05}
+                                        minDistance={8}
+                                        maxDistance={25}
+                                        maxPolarAngle={Math.PI / 2 - 0.1}
+                                    />
+                                ) : (
+                                    <AutoTrackingSystem />
+                                )}
+                            </>
+                        )}
+                        <PerspectiveCamera
+                            makeDefault
+                            position={[0, 8, 15]}
+                            near={0.1}
+                            far={1000}
                         />
-                    ) : (
-                        <>
-                            <EffectComposer>
-                                <Bloom
-                                    blendFunction={BlendFunction.ADD}
-                                    mipmapBlur
-                                    luminanceSmoothing={0}
-                                    intensity={1.5}
-                                />
-                            </EffectComposer>
+                    </Suspense>
+                </Canvas>
 
-                            <ClosedSpaceScene />
-                            {isIslandVisible && (
-                                <FloatingIsland
-                                    position={[0, -2, 0]}
-                                    scale={[0.5, 0.5, 0.5]}
-                                    onPortalClick={handlePortalClick}
-                                    onLoad={() => console.log('Island loaded')}
-                                />
-                            )}
-
-                            <ambientLight intensity={0.5} />
-                            <pointLight
-                                position={[10, 10, 10]}
-                                intensity={1}
-                                castShadow
-                            />
-                            <hemisphereLight
-                                intensity={0.3}
-                                color="#ffffff"
-                                groundColor="#000000"
-                            />
-
-                            {cameraMode === 'free' ? (
-                                <OrbitControls
-                                    enableDamping
-                                    dampingFactor={0.05}
-                                    minDistance={8}
-                                    maxDistance={25}
-                                    maxPolarAngle={Math.PI / 2 - 0.1}
-                                />
-                            ) : (
-                                <AutoTrackingSystem />
-                            )}
-                        </>
-                    )}
-                    <PerspectiveCamera
-                        makeDefault
-                        position={[0, 8, 15]}
-                        near={0.1}
-                        far={1000}
-                    />
-                </Suspense>
-            </Canvas>
-
-            {showPortalMessage && isIslandVisible && (
-                <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 font-sans text-white text-center text-lg bg-black/50 p-4 rounded-lg backdrop-blur-sm z-50">
-                    Click on the portal to enter!!
-                </div>
-            )}
-        </div>
+                {showPortalMessage && isIslandVisible && (
+                    <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 font-sans text-white text-center text-lg bg-black/50 p-4 rounded-lg backdrop-blur-sm z-50">
+                        Click on the portal to enter!!
+                    </div>
+                )}
+            </div>
+        </>
     );
 }

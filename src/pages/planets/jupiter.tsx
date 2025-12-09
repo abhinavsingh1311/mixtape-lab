@@ -1,6 +1,7 @@
 import { Layout } from '@/components/shared/Layout';
 import { ContactCard } from '@/components/shared/ContactCard';
 import { Mail, Github, Linkedin, Phone } from 'lucide-react';
+import Head from 'next/head';
 
 export default function JupiterPage() {
     const contacts = [
@@ -31,16 +32,27 @@ export default function JupiterPage() {
     ];
 
     return (
-        <Layout
-            color="#C88B3A"
-            title="Contact"
-            description="Get in touch with me"
-        >
-            <div className="grid gap-4">
-                {contacts.map((contact, index) => (
-                    <ContactCard key={index} {...contact} />
-                ))}
-            </div>
-        </Layout>
+        <>
+            <Head>
+                <script async src="https://www.googletagmanager.com/gtag/js?id=G-5R3TT33HR4"></script>
+                <script>
+                    {`window.dataLayer = window.dataLayer || [];
+                    function gtag(){dataLayer.push(arguments);}
+                    gtag('js', new Date());
+                    gtag('config', 'G-5R3TT33HR4');`}
+                </script>
+            </Head>
+            <Layout
+                color="#C88B3A"
+                title="Contact"
+                description="Get in touch with me"
+            >
+                <div className="grid gap-4">
+                    {contacts.map((contact, index) => (
+                        <ContactCard key={index} {...contact} />
+                    ))}
+                </div>
+            </Layout>
+        </>
     );
 }

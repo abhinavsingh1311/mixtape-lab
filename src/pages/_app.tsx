@@ -5,6 +5,7 @@ import { AnimatePresence } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import { useEffect, useState } from 'react';
+import Head from 'next/head';
 import '../../src/utils/three-shader-fix';
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -26,26 +27,36 @@ function MyApp({ Component, pageProps }: AppProps) {
             window.removeEventListener('resize', checkMobile);
         };
     }, []);
-
     // Pass isMobile to all pages
     return (
-        <ErrorBoundary fallback={(error) => (
-            <div className="fixed inset-0 flex items-center justify-center bg-black/80">
+        <>
+            <Head>
                 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-                <div className="bg-white p-8 rounded-lg max-w-2xl w-full text-center">
-                    <h1 className="text-2xl font-bold text-red-600 mb-4">Something went wrong</h1>
-                    <p className="text-gray-700">{error.message}</p>
-                    <button
-                        className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                        onClick={() => window.location.reload()}
-                    >
-                        Reload Page
-                    </button>
+                <script async src="https://www.googletagmanager.com/gtag/js?id=G-5R3TT33HR4"></script>
+                <script>
+                    {`window.dataLayer = window.dataLayer || [];
+                    function gtag(){dataLayer.push(arguments);}
+                    gtag('js', new Date());
+                    gtag('config', 'G-5R3TT33HR4');`}
+                </script>
+            </Head>
+            <ErrorBoundary fallback={(error) => (
+                <div className="fixed inset-0 flex items-center justify-center bg-black/80">
+                    <div className="bg-white p-8 rounded-lg max-w-2xl w-full text-center">
+                        <h1 className="text-2xl font-bold text-red-600 mb-4">Something went wrong</h1>
+                        <p className="text-gray-700">{error.message}</p>
+                        <button
+                            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                            onClick={() => window.location.reload()}
+                        >
+                            Reload Page
+                        </button>
+                    </div>
                 </div>
-            </div>
-        )}>
-            <Component {...pageProps} isMobile={isMobile} />
-        </ErrorBoundary>
+            )}>
+                <Component {...pageProps} isMobile={isMobile} />
+            </ErrorBoundary>
+        </>
     );
 }
 

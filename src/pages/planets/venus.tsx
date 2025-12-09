@@ -1,5 +1,6 @@
 import { Layout } from '@/components/shared/Layout';
 import ProjectCard from '@/components/shared/ProjectCard';
+import Head from 'next/head';
 
 export default function VenusPage() {
     const projects = [
@@ -39,16 +40,27 @@ export default function VenusPage() {
     ];
 
     return (
-        <Layout
-            color="#E6B800"
-            title="My Work"
-            description="Portfolio and projects"
-        >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {projects.map((project, index) => (
-                    <ProjectCard key={index} {...project} />
-                ))}
-            </div>
-        </Layout>
+        <>
+            <Head>
+                <script async src="https://www.googletagmanager.com/gtag/js?id=G-5R3TT33HR4"></script>
+                <script>
+                    {`window.dataLayer = window.dataLayer || [];
+                    function gtag(){dataLayer.push(arguments);}
+                    gtag('js', new Date());
+                    gtag('config', 'G-5R3TT33HR4');`}
+                </script>
+            </Head>
+            <Layout
+                color="#E6B800"
+                title="My Work"
+                description="Portfolio and projects"
+            >
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {projects.map((project, index) => (
+                        <ProjectCard key={index} {...project} />
+                    ))}
+                </div>
+            </Layout>
+        </>
     );
 }

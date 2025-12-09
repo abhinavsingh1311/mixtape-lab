@@ -1,6 +1,7 @@
 // src/pages/planets/earth.tsx
 import { Layout } from '@/components/shared/Layout';
 import { SkillsSection } from '@/components/shared/SkillsSection';
+import Head from 'next/head';
 
 export default function EarthPage() {
     const skills = [
@@ -27,17 +28,29 @@ export default function EarthPage() {
     ];
 
     return (
-        <Layout
-            color="#4B9CD3"
-            title="Technical Skills"
-            description="My expertise and capabilities"
-        >
-            <div className="prose prose-invert max-w-none">
-                <section className="mb-12">
-                    <h2 className="text-2xl font-bold mb-6">Skills Overview</h2>
-                    <SkillsSection skills={skills} />
-                </section>
-            </div>
-        </Layout>
+        <>
+            <Head>
+                <script async src="https://www.googletagmanager.com/gtag/js?id=G-5R3TT33HR4"></script>
+                <script>
+                    {`window.dataLayer = window.dataLayer || [];
+                    function gtag(){dataLayer.push(arguments);}
+                    gtag('js', new Date());
+                    gtag('config', 'G-5R3TT33HR4');`}
+                </script>
+            </Head>
+
+            <Layout
+                color="#4B9CD3"
+                title="Technical Skills"
+                description="My expertise and capabilities"
+            >
+                <div className="prose prose-invert max-w-none">
+                    <section className="mb-12">
+                        <h2 className="text-2xl font-bold mb-6">Skills Overview</h2>
+                        <SkillsSection skills={skills} />
+                    </section>
+                </div>
+            </Layout>
+        </>
     );
 }
