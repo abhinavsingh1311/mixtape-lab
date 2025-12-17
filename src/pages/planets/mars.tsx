@@ -8,7 +8,7 @@ export default function MarsPage() {
         {
             company: "Society For AI Literacy (SAIL)",
             role: "Full Stack Developer",
-            period: "May 2025 - August 2025",
+            period: "May 2024 - August 2024",
             description: [
                 "Reduced data processing time by 40% through optimized PostgreSQL schema and efficient data pipelines",
                 "Enhanced security by 85% implementing JWT tokenization and role-based access control",
