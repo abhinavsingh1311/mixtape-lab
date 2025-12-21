@@ -77,7 +77,7 @@ export default function MercuryPage() {
 
                         <h2 className="text-2xl font-bold mb-6">Education</h2>
                         <div className="flex flex-col md:flex-row gap-6 mb-6">
-                            <div className="md:w-1/4 relative h-48 md:h-auto">
+                            <div className="md:relative h-48 md:h-auto" style={{ width: '-webkit-fill-available' }}>
                                 <Image
                                     src="/images/nait-logo.jpg"
                                     alt="NAIT logo"
@@ -87,7 +87,7 @@ export default function MercuryPage() {
                                 />
                             </div>
                             <div className="md:w-3/4 bg-gray-900 rounded-lg p-6">
-                                <h3 className="text-xl font-bold">DMIT: Computer Software Dev. Diploma</h3>
+                                <a className="text-xl font-bold" href="https://www.nait.ca/programs/software-development" target='_blank' style={{ textDecoration: "underline" }}>DMIT: Computer Software Dev. Diploma</a>
                                 <div className="text-gray-400 mb-2">Northern Alberta Institute of Technology (NAIT) | 2023-2024</div>
                                 <ul className="list-disc list-inside text-gray-300">
                                     <li>Graduated with perfect 4.0 CGPA</li>
@@ -101,7 +101,7 @@ export default function MercuryPage() {
                         <h2 className="text-2xl font-bold mb-6">My Path to Development</h2>
 
                         <div className="flex flex-col md:w-auto relative justify-center items-center">
-                            <div className="w-80 h-60 md:h-80 relative overflow-hidden rounded-lg">
+                            <div className="h-60 md:h-80 relative overflow-hidden rounded-lg" style={{ width: "-webkit-fill-available" }}>
                                 <Image
                                     src="/images/coding-journey.jpg"
                                     alt="My development journey"
@@ -151,9 +151,10 @@ export default function MercuryPage() {
                         </div>
 
                         <p className="text-lg mb-6 mt-6">
-                            Today, I continue to push the boundaries of what is possible with web technologies. My recent work on this
-                            interactive 3D portfolio showcases my ability to create immersive digital experiences while maintaining
-                            high performance through techniques like geometry instancing and shader-based optimizations.
+                            Today, I continue to push the boundaries of what is possible with web technologies. My recent work at SAIL (Society for AI Literacy)
+                            involved building an EHR data pipeline for cardiologists—an automated system using OpenAI's API that parses and standardizes medical records,
+                            saving clinicians hundreds of hours of manual data entry each month. While this is just the beginning of my career,
+                            it taught me what it takes to ship production-ready software and collaborate directly with real clients.
                         </p>
 
                         <p className="text-lg">

@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 
 interface ExperienceProps {
     company: string;
+    link: string;
     role: string;
     period: string;
     description: string[];
@@ -10,6 +11,7 @@ interface ExperienceProps {
 
 export const ExperienceCard: React.FC<ExperienceProps> = ({
     company,
+    link,
     role,
     period,
     description,
@@ -20,7 +22,7 @@ export const ExperienceCard: React.FC<ExperienceProps> = ({
         animate={{ opacity: 1, y: 0 }}
         className="bg-gray-900 rounded-lg p-6 mb-6"
     >
-        <h3 className="text-xl font-bold">{company}</h3>
+        <a href={link} target="_blank" className="text-xl font-bold mb-1" style={{ textDecoration: "underline" }}>{company}</a>
         <div className="text-gray-400 mb-2">{role} | {period}</div>
         <ul className="list-disc list-inside mb-4">
             {description.map((item, index) => (
@@ -34,5 +36,5 @@ export const ExperienceCard: React.FC<ExperienceProps> = ({
                 </span>
             ))}
         </div>
-    </motion.div>
+    </motion.div >
 );

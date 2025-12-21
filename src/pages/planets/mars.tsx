@@ -7,8 +7,9 @@ export default function MarsPage() {
     const experiences = [
         {
             company: "Society For AI Literacy (SAIL)",
+            link: "https://societyforailiteracy.com/",
             role: "Full Stack Developer",
-            period: "May 2024 - August 2024",
+            period: "May 2025 - August 2025",
             description: [
                 "Reduced data processing time by 40% through optimized PostgreSQL schema and efficient data pipelines",
                 "Enhanced security by 85% implementing JWT tokenization and role-based access control",
@@ -19,6 +20,7 @@ export default function MarsPage() {
         },
         {
             company: "DMIT CSD Capstone Project",
+            link: "https://certifiedorigins.space",
             role: "Full Stack Developer",
             period: "September 2024 - December 2024",
             description: [
@@ -63,7 +65,7 @@ export default function MarsPage() {
                                     alt="AFPI Mohali"
                                     fill
                                     style={{
-                                        objectFit: 'contain',
+                                        objectFit: 'cover',
                                         backgroundColor: '#170c09'
                                     }}
                                     sizes="(max-width: 768px) 100vw, 50vw"
@@ -71,7 +73,8 @@ export default function MarsPage() {
                             </div>
                             <div className="md:w-2/3">
                                 <p>
-                                    My journey of personal growth began at the Army Forces Preparatory Institute (AFPI) in Mohali.
+                                    My journey of personal growth began at the <a href="https://www.mrsafpi.punjab.gov.in/" style={{ color: "#ee9191", textDecoration: "none" }}
+                                        onMouseOver={(e) => (e.currentTarget.style.fontSize = "18px", e.currentTarget.style.color = "#fefefe", e.currentTarget.style.textDecoration = "underline")} onMouseOut={(e) => (e.currentTarget.style.fontSize = "16px", e.currentTarget.style.color = "#ee9191")}>Armed Forces Preparatory Institute (AFPI)</a> in Mohali.
                                     Those formative years instilled in me the core values of truth, honor, and integrity that continue to shape
                                     my character and approach to life. The rigorous military-style education and training transformed me in
                                     profound ways — I became more disciplined, independent, and developed a thoughtful perspective on challenges.
@@ -162,9 +165,22 @@ export default function MarsPage() {
                         <h2 className="text-2xl font-bold mb-6">Building Professional Skills</h2>
 
                         <div className="flex flex-col-reverse md:flex-row gap-8 mb-8">
-                            <div className="md:w-auto">
+
+                            <div className="md:w-1/3 relative h-64 md:h-auto">
+                                <Image
+                                    src="/images/coding.jpg"
+                                    alt="Developing coding skills"
+                                    fill
+                                    className="object-cover rounded-lg"
+                                    sizes="(max-width: 768px) 100vw, 33vw"
+                                />
+                            </div>
+                            <div className="md:w-2/3 relative">
                                 <p>
-                                    At NAIT, I discovered my passion for full-stack development. The structured curriculum combined with
+                                    At <a href="https://www.nait.ca/nait/home/" style={{ color: "#6c89e7ff", textDecoration: "none" }}
+                                        onMouseOver={(e) => (e.currentTarget.style.fontSize = "18px", e.currentTarget.style.color = "#fefefe", e.currentTarget.style.textDecoration = "underline")} onMouseOut={(e) =>
+                                            (e.currentTarget.style.fontSize = "16px", e.currentTarget.style.color = "#6c89e7ff")}>NAIT</a>,
+                                    I discovered my passion for full-stack development. The structured curriculum combined with
                                     my self-directed learning allowed me to build a comprehensive skill set across multiple technologies.
                                     I applied the same discipline from my military preparation days to master programming languages,
                                     database systems, and web frameworks. The desire to excel in academic pursuits, instilled during my AFPI days,
@@ -179,15 +195,6 @@ export default function MarsPage() {
                                     strict deadlines—skills honed at AFPI—proved invaluable during intensive project phases and exam periods.
                                 </p>
                             </div>
-                            {/* <div className="md:w-1/3 relative h-64 md:h-auto">
-                            <Image
-                                src="/images/coding-skills.jpg"
-                                alt="Developing coding skills"
-                                fill
-                                className="object-cover rounded-lg"
-                                sizes="(max-width: 768px) 100vw, 33vw"
-                            />
-                        </div> */}
                         </div>
                     </section>
 
@@ -211,7 +218,7 @@ export default function MarsPage() {
                         <p className="mb-4">
                             When I reflect on my journey from AFPI Mohali to becoming a software developer in Canada, I see how
                             each chapter has contributed to who I am today. The discipline, resilience, and methodical approach
-                            I developed in my military preparation days continue to influence my approach to software development
+                            I developed in my preparation days continue to influence my approach to software development
                             and problem-solving. The values of being truthful, trustworthy, honest, and forthright under all circumstances
                             remain central to my professional ethic.
                         </p>

@@ -80,13 +80,13 @@ export default function SaturnPage() {
             readTime: "5",
             link: "https://envisagedmemoirs.blogspot.com/"
         },
-        {
-            title: "The Digital Frontier",
-            excerpt: "Thoughts on emerging technologies and how they're reshaping our world.",
-            date: "2024-03-20",
-            readTime: "7",
-            link: "#"
-        }
+        // {
+        //     title: "The Digital Frontier",
+        //     excerpt: "Thoughts on emerging technologies and how they're reshaping our world.",
+        //     date: "2024-03-20",
+        //     readTime: "7",
+        //     link: "#"
+        // }
     ];
 
     const artworks: Artwork[] = [
@@ -148,7 +148,7 @@ export default function SaturnPage() {
                     {/* Written Content Section */}
                     <section className="mb-12">
                         <h2 className="text-2xl font-bold mb-6">Latest Articles</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
                             {articles.map((article, index) => (
                                 <ArticleCard key={index} {...article} />
                             ))}
@@ -182,13 +182,16 @@ export default function SaturnPage() {
                     {/* Visual Arts Section */}
                     <section className="mb-12">
                         <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-2xl font-bold">Sketches & Drawings</h2>
+                            <h2 className="text-2xl font-bold">Photography</h2>
                         </div>
 
                         <p className="mb-6">
-                            Beyond coding and writing, I find balance and creative expression through traditional art forms.
-                            Sketching allows me to slow down, observe closely, and translate my perspective onto paper.
-                            Each drawing represents a moment of focus and contemplation.
+                            Beyond coding and writing, I find balance and creative expression through different Photography forms.
+                            It allows me to slow down, observe closely, and translate my perspective into a photo.
+                            Each picture represents a moment of focus and contemplation.
+                            <br />
+                            <br />
+                            <a href="https://vsco.co/cokenotcoke/gallery" style={{ textDecoration: 'underline', color: '#E6B800' }} target='_blank'>Checkout my collection here!</a>
                         </p>
 
                         {/* <ArtsGallery artworks={artworks} /> */}
@@ -198,22 +201,22 @@ export default function SaturnPage() {
                     <section>
                         <h2 className="text-2xl font-bold mb-6">My Artistic Process</h2>
 
-                        <div className="flex flex-col md:flex-row gap-6">
-                            <div className="md:w-1/2">
-                                <p className="mb-4">
-                                    My approach to both writing and sketching is centered on observation and reflection.
-                                    Drawing helps me process my thoughts and see the world differently. I often carry a
-                                    sketchbook to capture interesting scenes, architectural details, or fleeting moments.
-                                </p>
-                                <p>
-                                    Sketching provides a balancing counterpoint to the digital precision of programming.
-                                    Where code requires exacting logic, drawing embraces imperfection and intuition.
-                                    This creative duality keeps my thinking flexible and helps me approach technical
-                                    problems with fresh perspectives.
-                                </p>
-                            </div>
+                        <div className="flex flex-col md:flex-column gap-6">
+                            {/* <div className="md:w-1/2"> */}
+                            <p className="mb-4">
+                                My approach to both writing and sketching is centered on observation and reflection.
+                                Drawing helps me process my thoughts and see the world differently. I often carry a
+                                sketchbook to capture interesting scenes, architectural details, or fleeting moments.
+                            </p>
+                            <p>
+                                Sketching provides a balancing counterpoint to the digital precision of programming.
+                                Where code requires exacting logic, drawing embraces imperfection and intuition.
+                                This creative duality keeps my thinking flexible and helps me approach technical
+                                problems with fresh perspectives.
+                            </p>
+                            {/* </div> */}
 
-                            <div className="md:w-1/2 bg-gray-900 rounded-lg p-6">
+                            {/* <div className="md:w-1/2 bg-gray-900 rounded-lg p-6">
                                 <h3 className="text-xl font-bold mb-3">Materials & Techniques</h3>
                                 <ul className="list-disc list-inside space-y-2 text-gray-300">
                                     <li>Graphite pencils (HB through 6B) for tonal studies</li>
@@ -223,7 +226,7 @@ export default function SaturnPage() {
                                     <li>Watercolor washes combined with ink linework</li>
                                     <li>Mixed media explorations in visual journals</li>
                                 </ul>
-                            </div>
+                            </div> */}
                         </div>
                     </section>
                 </div>

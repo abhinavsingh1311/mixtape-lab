@@ -11,7 +11,7 @@ export default function EarthPage() {
         },
         {
             category: "Backend",
-            items: ["ASP.NET", "Node.js", "RESTful APIs", "FastAPI"]
+            items: ["ASP.NET", "Node.js", "RESTful APIs", "Express.js"]
         },
         {
             category: "Languages",
@@ -23,7 +23,7 @@ export default function EarthPage() {
         },
         {
             category: "Tools & Others",
-            items: ["Docker", "Git", "SSAS", "SSIS", "SSRS", "Blender"]
+            items: ["Docker", "Git", "SSAS", "SSIS", "SSRS", "Github Actions"]
         }
     ];
 
