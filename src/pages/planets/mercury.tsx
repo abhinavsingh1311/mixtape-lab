@@ -152,7 +152,7 @@ export default function MercuryPage() {
 
                         <p className="text-lg mb-6 mt-6">
                             Today, I continue to push the boundaries of what is possible with web technologies. My recent work at SAIL (Society for AI Literacy)
-                            involved building an EHR data pipeline for cardiologists—an automated system using OpenAI's API that parses and standardizes medical records,
+                            involved building an EHR data pipeline for cardiologists—an automated system using OpenAI&apos;s API that parses and standardizes medical records,
                             saving clinicians hundreds of hours of manual data entry each month. While this is just the beginning of my career,
                             it taught me what it takes to ship production-ready software and collaborate directly with real clients.
                         </p>
