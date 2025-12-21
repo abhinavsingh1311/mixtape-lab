@@ -1,8 +1,6 @@
 import { Layout } from '@/components/shared/Layout';
 import { ArticleCard } from '@/components/shared/ArticleCard';
-import Image from 'next/image';
-import { useState } from 'react';
-import Head from 'next/head';
+import Script from 'next/script';
 
 // Define types for artwork items
 interface Artwork {
@@ -12,64 +10,64 @@ interface Artwork {
     medium: string;
 }
 
-// Custom Arts Gallery Component
-const ArtsGallery: React.FC<{ artworks: Artwork[] }> = ({ artworks }) => {
-    const [activeImage, setActiveImage] = useState<Artwork | null>(null);
+// // Custom Arts Gallery Component
+// const ArtsGallery: React.FC<{ artworks: Artwork[] }> = ({ artworks }) => {
+//     const [activeImage, setActiveImage] = useState<Artwork | null>(null);
 
-    return (
-        <div>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-                {artworks.map((artwork, index) => (
-                    <div
-                        key={index}
-                        className="relative aspect-square cursor-pointer rounded-lg overflow-hidden hover:opacity-90 transition-opacity"
-                        onClick={() => setActiveImage(artwork)}
-                    >
-                        <Image
-                            src={artwork.src}
-                            alt={artwork.title}
-                            fill
-                            style={{
-                                objectFit: 'cover',
-                                objectPosition: '50% 30%'
-                            }}
-                            sizes="(max-width: 640px) 45vw, (max-width: 768px) 30vw, 20vw"
-                        />
-                    </div>
-                ))}
-            </div>
+//     return (
+//         <div>
+//             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+//                 {artworks.map((artwork, index) => (
+//                     <div
+//                         key={index}
+//                         className="relative aspect-square cursor-pointer rounded-lg overflow-hidden hover:opacity-90 transition-opacity"
+//                         onClick={() => setActiveImage(artwork)}
+//                     >
+//                         <Image
+//                             src={artwork.src}
+//                             alt={artwork.title}
+//                             fill
+//                             style={{
+//                                 objectFit: 'cover',
+//                                 objectPosition: '50% 30%'
+//                             }}
+//                             sizes="(max-width: 640px) 45vw, (max-width: 768px) 30vw, 20vw"
+//                         />
+//                     </div>
+//                 ))}
+//             </div>
 
-            {/* Lightbox for viewing full-size art */}
-            {activeImage && (
-                <div
-                    className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
-                    onClick={() => setActiveImage(null)}
-                >
-                    <div className="relative max-w-4xl max-h-[80vh] w-full">
-                        <Image
-                            src={activeImage.src}
-                            alt={activeImage.title}
-                            width={1200}
-                            height={800}
-                            style={{
-                                width: '100%',
-                                height: 'auto',
-                                objectFit: 'contain',
-                                maxHeight: '80vh'
-                            }}
-                        />
-                        <div className="bg-black/60 p-4 absolute bottom-0 left-0 right-0">
-                            <h3 className="text-xl font-bold">{activeImage.title}</h3>
-                            <p className="text-gray-300">{activeImage.medium}</p>
-                            <p className="text-gray-400 mt-2">{activeImage.description}</p>
-                        </div>
-                    </div>
-                </div>
-            )}
+//             {/* Lightbox for viewing full-size art */}
+//             {activeImage && (
+//                 <div
+//                     className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+//                     onClick={() => setActiveImage(null)}
+//                 >
+//                     <div className="relative max-w-4xl max-h-[80vh] w-full">
+//                         <Image
+//                             src={activeImage.src}
+//                             alt={activeImage.title}
+//                             width={1200}
+//                             height={800}
+//                             style={{
+//                                 width: '100%',
+//                                 height: 'auto',
+//                                 objectFit: 'contain',
+//                                 maxHeight: '80vh'
+//                             }}
+//                         />
+//                         <div className="bg-black/60 p-4 absolute bottom-0 left-0 right-0">
+//                             <h3 className="text-xl font-bold">{activeImage.title}</h3>
+//                             <p className="text-gray-300">{activeImage.medium}</p>
+//                             <p className="text-gray-400 mt-2">{activeImage.description}</p>
+//                         </div>
+//                     </div>
+//                 </div>
+//             )}
 
-        </div>
-    );
-};
+//         </div>
+//     );
+// };
 
 export default function SaturnPage() {
     const articles = [
@@ -89,56 +87,21 @@ export default function SaturnPage() {
         // }
     ];
 
-    const artworks: Artwork[] = [
-        {
-            src: "/images/sketch1.jpg",
-            title: "Portrait Study",
-            description: "Pencil sketch exploring human expression and emotion.",
-            medium: "Graphite on Paper / 2023"
-        },
-        {
-            src: "/images/sketch2.jpg",
-            title: "Urban Landscape",
-            description: "Cityscape sketch capturing architectural details and perspective.",
-            medium: "Pen and Ink / 2023"
-        },
-        {
-            src: "/images/sketch3.jpg",
-            title: "Nature Study",
-            description: "Detailed observation of natural forms and textures.",
-            medium: "Charcoal on Paper / 2022"
-        },
-        {
-            src: "/images/sketch4.jpg",
-            title: "Figure Drawing",
-            description: "Study of human form and movement.",
-            medium: "Graphite and Charcoal / 2023"
-        },
-        {
-            src: "/images/sketch5.jpg",
-            title: "Abstract Composition",
-            description: "Exploration of line, form, and negative space.",
-            medium: "Mixed Media / 2024"
-        },
-        {
-            src: "/images/sketch6.jpg",
-            title: "Still Life",
-            description: "Careful study of light, shadow, and composition.",
-            medium: "Pencil on Paper / 2023"
-        }
-    ];
 
     return (
         <>
-            <Head>
-                <script async src="https://www.googletagmanager.com/gtag/js?id=G-5R3TT33HR4"></script>
-                <script>
-                    {`window.dataLayer = window.dataLayer || [];
+            <Script
+                src="https://www.googletagmanager.com/gtag/js?id=G-5R3TT33HR4"
+                strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+                {`
+                    window.dataLayer = window.dataLayer || [];
                     function gtag(){dataLayer.push(arguments);}
                     gtag('js', new Date());
-                    gtag('config', 'G-5R3TT33HR4');`}
-                </script>
-            </Head>
+                    gtag('config', 'G-5R3TT33HR4');
+                `}
+            </Script>
             <Layout
                 color="#E6B800"
                 title="Blog, Thoughts & Arts"

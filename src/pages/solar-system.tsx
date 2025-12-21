@@ -14,7 +14,7 @@ import type { CameraMode } from '@/components/three/SolarSystem/types';
 import { SolarSystemScene } from '@/components/solar-system/SolarSystemScene';
 import { Navigation } from '@/components/solar-system/Navigation';
 import { ResponsiveGuide } from '@/components/solar-system/ResponsiveGuide';
-import Head from 'next/head';
+import Script from 'next/script';
 
 export default function SolarSystemPage() {
     const [isMuted, setIsMuted] = useState(false);
@@ -28,6 +28,7 @@ export default function SolarSystemPage() {
             setCameraMode(savedMode as CameraMode);
         }
         localStorage.setItem('cameraMode', cameraMode);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // Sound effects
@@ -69,15 +70,18 @@ export default function SolarSystemPage() {
 
     return (
         <>
-            <Head>
-                <script async src="https://www.googletagmanager.com/gtag/js?id=G-5R3TT33HR4"></script>
-                <script>
-                    {`window.dataLayer = window.dataLayer || [];
+            <Script
+                src="https://www.googletagmanager.com/gtag/js?id=G-5R3TT33HR4"
+                strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+                {`
+                    window.dataLayer = window.dataLayer || [];
                     function gtag(){dataLayer.push(arguments);}
                     gtag('js', new Date());
-                    gtag('config', 'G-5R3TT33HR4');`}
-                </script>
-            </Head>
+                    gtag('config', 'G-5R3TT33HR4');
+                `}
+            </Script>
             <ErrorBoundary>
                 <div className="h-screen w-screen relative bg-black">
                     <Navigation

@@ -1,7 +1,7 @@
 import { Layout } from '@/components/shared/Layout';
 import { ExperienceCard } from '@/components/shared/ExperienceCard';
 import Image from 'next/image';
-import Head from 'next/head';
+import Script from 'next/script';
 
 export default function MarsPage() {
     const experiences = [
@@ -39,15 +39,18 @@ export default function MarsPage() {
 
     return (
         <>
-            <Head>
-                <script async src="https://www.googletagmanager.com/gtag/js?id=G-5R3TT33HR4"></script>
-                <script>
-                    {`window.dataLayer = window.dataLayer || [];
+            <Script
+                src="https://www.googletagmanager.com/gtag/js?id=G-5R3TT33HR4"
+                strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+                {`
+                    window.dataLayer = window.dataLayer || [];
                     function gtag(){dataLayer.push(arguments);}
                     gtag('js', new Date());
-                    gtag('config', 'G-5R3TT33HR4');`}
-                </script>
-            </Head>
+                    gtag('config', 'G-5R3TT33HR4');
+                `}
+            </Script>
             <Layout
                 color="#E27B58"
                 title="My Personal Journey"

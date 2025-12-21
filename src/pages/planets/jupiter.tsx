@@ -1,7 +1,7 @@
 import { Layout } from '@/components/shared/Layout';
 import { ContactCard } from '@/components/shared/ContactCard';
 import { Mail, Github, Linkedin, Phone } from 'lucide-react';
-import Head from 'next/head';
+import Script from 'next/script';
 
 export default function JupiterPage() {
     const contacts = [
@@ -33,15 +33,18 @@ export default function JupiterPage() {
 
     return (
         <>
-            <Head>
-                <script async src="https://www.googletagmanager.com/gtag/js?id=G-5R3TT33HR4"></script>
-                <script>
-                    {`window.dataLayer = window.dataLayer || [];
+            <Script
+                src="https://www.googletagmanager.com/gtag/js?id=G-5R3TT33HR4"
+                strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+                {`
+                    window.dataLayer = window.dataLayer || [];
                     function gtag(){dataLayer.push(arguments);}
                     gtag('js', new Date());
-                    gtag('config', 'G-5R3TT33HR4');`}
-                </script>
-            </Head>
+                    gtag('config', 'G-5R3TT33HR4');
+                `}
+            </Script>
             <Layout
                 color="#C88B3A"
                 title="Contact"

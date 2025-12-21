@@ -1,6 +1,6 @@
 import { Layout } from '@/components/shared/Layout';
 import ProjectCard from '@/components/shared/ProjectCard';
-import Head from 'next/head';
+import Script from 'next/script';
 
 export default function VenusPage() {
     const projects = [
@@ -41,15 +41,18 @@ export default function VenusPage() {
 
     return (
         <>
-            <Head>
-                <script async src="https://www.googletagmanager.com/gtag/js?id=G-5R3TT33HR4"></script>
-                <script>
-                    {`window.dataLayer = window.dataLayer || [];
+            <Script
+                src="https://www.googletagmanager.com/gtag/js?id=G-5R3TT33HR4"
+                strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+                {`
+                    window.dataLayer = window.dataLayer || [];
                     function gtag(){dataLayer.push(arguments);}
                     gtag('js', new Date());
-                    gtag('config', 'G-5R3TT33HR4');`}
-                </script>
-            </Head>
+                    gtag('config', 'G-5R3TT33HR4');
+                `}
+            </Script>
             <Layout
                 color="#E6B800"
                 title="My Work"

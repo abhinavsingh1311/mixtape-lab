@@ -7,6 +7,7 @@ import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import '../../src/utils/three-shader-fix';
+import Script from 'next/script';
 
 function MyApp({ Component, pageProps }: AppProps) {
     const [isMobile, setIsMobile] = useState(false);
@@ -32,14 +33,19 @@ function MyApp({ Component, pageProps }: AppProps) {
         <>
             <Head>
                 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-                <script async src="https://www.googletagmanager.com/gtag/js?id=G-5R3TT33HR4"></script>
-                <script>
-                    {`window.dataLayer = window.dataLayer || [];
+            </Head>
+            <Script
+                src="https://www.googletagmanager.com/gtag/js?id=G-5R3TT33HR4"
+                strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+                {`
+                    window.dataLayer = window.dataLayer || [];
                     function gtag(){dataLayer.push(arguments);}
                     gtag('js', new Date());
-                    gtag('config', 'G-5R3TT33HR4');`}
-                </script>
-            </Head>
+                    gtag('config', 'G-5R3TT33HR4');
+                `}
+            </Script>
             <ErrorBoundary fallback={(error) => (
                 <div className="fixed inset-0 flex items-center justify-center bg-black/80">
                     <div className="bg-white p-8 rounded-lg max-w-2xl w-full text-center">

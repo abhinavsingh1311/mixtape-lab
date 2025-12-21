@@ -13,7 +13,7 @@ import { IntroScene } from '@/components/home/IntroScene';
 import { AutoTrackingSystem } from '@/components/home/AutoTracking';
 import { LoadingScreen } from '@/components/home/LoadingScreen';
 import { SoundController } from '@/components/home/SoundController';
-import Head from 'next/head';
+import Script from 'next/script';
 
 export default function Home() {
     const [cameraMode, setCameraMode] = useState<'free' | 'tracking'>('tracking');
@@ -87,15 +87,18 @@ export default function Home() {
 
     return (
         <>
-            <Head>
-                <script async src="https://www.googletagmanager.com/gtag/js?id=G-5R3TT33HR4"></script>
-                <script>
-                    {`window.dataLayer = window.dataLayer || [];
+            <Script
+                src="https://www.googletagmanager.com/gtag/js?id=G-5R3TT33HR4"
+                strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+                {`
+                    window.dataLayer = window.dataLayer || [];
                     function gtag(){dataLayer.push(arguments);}
                     gtag('js', new Date());
-                    gtag('config', 'G-5R3TT33HR4');`}
-                </script>
-            </Head>
+                    gtag('config', 'G-5R3TT33HR4');
+                `}
+            </Script>
 
             <div className="h-screen w-screen relative bg-black">
                 <div
