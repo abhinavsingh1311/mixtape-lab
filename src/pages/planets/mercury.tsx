@@ -80,7 +80,7 @@ export default function MercuryPage() {
 
                         <h2 className="text-2xl font-bold mb-6">Education</h2>
                         <div className="flex flex-col md:flex-row gap-6 mb-6">
-                            <div className="md:relative h-48 md:h-auto" style={{ width: '-webkit-fill-available' }}>
+                            <div className="relative h-48 md:h-auto md:w-1/4">
                                 <Image
                                     src="/images/nait-logo.jpg"
                                     alt="NAIT logo"
