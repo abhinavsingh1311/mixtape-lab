@@ -33,6 +33,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         <>
             <Head>
                 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+                <link rel="icon" href="/favicon.ico" />
+                <link rel="icon" type="image/png" href="/favicon-1.png" />
+                <meta name="theme-color" content="#000000" />
             </Head>
             <Script
                 src="https://www.googletagmanager.com/gtag/js?id=G-5R3TT33HR4"
