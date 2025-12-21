@@ -106,7 +106,7 @@ export default function SolarSystemPage() {
                     />
                     <ResponsiveGuide isMobile={isMobile} />
                     <div className={`fixed ${isMobile ? 'bottom-4 left-4 z-20' : 'bottom-4 left-4 z-20'} text-white`}>
-                        <h1 className={`${isMobile ? 'text-xl' : 'text-2xl'} mb-2`}>Abhinav Singh</h1>
+                        <a className={`${isMobile ? 'text-xl' : 'text-2xl'} mb-2`} href="https://github.com/abhinavsingh1311" target='_blank'>Abhinav Singh</a>
                         <div className={isMobile ? "scale-75 origin-left" : "text-xl"}>
                             <AlienClock />
                         </div>
