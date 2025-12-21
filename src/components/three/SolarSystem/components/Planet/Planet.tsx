@@ -126,9 +126,7 @@ export const Planet: React.FC<ExtendedPlanetProps> = ({
                                 anchorX="center"
                                 anchorY="middle"
                                 rotation={[0.5, Math.PI, 0]}
-                            >
-                                {planet.name}
-                            </Text>
+                            >{planet.name}</Text>
                         )}
                     </>
                 )}

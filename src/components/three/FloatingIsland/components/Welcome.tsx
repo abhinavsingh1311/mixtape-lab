@@ -11,7 +11,5 @@ export const WelcomeText: React.FC = () => (
         maxWidth={2}
         renderOrder={2}
         font="/Starjedi.ttf"
-    >
-        Welcome!
-    </Text>
+    >Welcome!</Text>
 );

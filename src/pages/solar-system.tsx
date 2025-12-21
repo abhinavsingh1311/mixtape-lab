@@ -32,7 +32,7 @@ export default function SolarSystemPage() {
     }, []);
 
     // Sound effects
-    const [playSpaceAmbient, { stop: stopSpaceAmbient }] = useSound(
+    const [playSpaceAmbient, { stop: stopSpaceAmbient, sound: ambientSound }] = useSound(
         '/sounds/ambient-space.mp3',
         {
             volume: 0.2,
@@ -55,13 +55,26 @@ export default function SolarSystemPage() {
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
-    // Handle sounds
+    // Handle sounds - start after user interaction
     useEffect(() => {
-        playSpaceAmbient();
+        const handleUserInteraction = () => {
+            if (ambientSound) {
+                playSpaceAmbient();
+            }
+        };
+
+        // Add listeners for user interaction
+        document.addEventListener('click', handleUserInteraction, { once: true });
+        document.addEventListener('keydown', handleUserInteraction, { once: true });
+        document.addEventListener('touchstart', handleUserInteraction, { once: true });
+
         return () => {
+            document.removeEventListener('click', handleUserInteraction);
+            document.removeEventListener('keydown', handleUserInteraction);
+            document.removeEventListener('touchstart', handleUserInteraction);
             stopSpaceAmbient();
         };
-    }, [playSpaceAmbient, stopSpaceAmbient]);
+    }, [playSpaceAmbient, stopSpaceAmbient, ambientSound]);
 
     // Handle mute state
     useEffect(() => {

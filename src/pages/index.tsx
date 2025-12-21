@@ -25,7 +25,7 @@ export default function Home() {
     const [ambientStarted, setAmbientStarted] = useState(false);
     const router = useRouter();
 
-    const [playAmbient, { stop: stopAmbient }] = useSound('/sounds/ambient-space.mp3', {
+    const [playAmbient, { stop: stopAmbient, sound: ambientSound }] = useSound('/sounds/ambient-space.mp3', {
         volume: 0.3,
         loop: true,
         interrupt: true
@@ -37,13 +37,28 @@ export default function Home() {
         interrupt: true
     });
 
+    // Handle user interaction to start audio context
     useEffect(() => {
-        // Start ambient sound immediately
-        if (!ambientStarted) {
-            playAmbient();
-            setAmbientStarted(true);
-        }
+        const handleUserInteraction = () => {
+            if (!ambientStarted && ambientSound) {
+                playAmbient();
+                setAmbientStarted(true);
+            }
+        };
 
+        // Add listeners for user interaction
+        document.addEventListener('click', handleUserInteraction, { once: true });
+        document.addEventListener('keydown', handleUserInteraction, { once: true });
+        document.addEventListener('touchstart', handleUserInteraction, { once: true });
+
+        return () => {
+            document.removeEventListener('click', handleUserInteraction);
+            document.removeEventListener('keydown', handleUserInteraction);
+            document.removeEventListener('touchstart', handleUserInteraction);
+        };
+    }, [ambientStarted, ambientSound, playAmbient]);
+
+    useEffect(() => {
         if (showIntro) {
             let messageInterval: NodeJS.Timeout;
             const timer = setTimeout(() => {
@@ -68,7 +83,7 @@ export default function Home() {
                 if (messageInterval) clearInterval(messageInterval);
             };
         }
-    }, [showIntro, ambientStarted, playAmbient, stopAmbient]);
+    }, [showIntro, stopAmbient]);
 
     const handlePortalClick = () => {
         setShowPortalMessage(false);
@@ -167,7 +182,7 @@ export default function Home() {
                                         position={[0, -2, 0]}
                                         scale={[0.5, 0.5, 0.5]}
                                         onPortalClick={handlePortalClick}
-                                        onLoad={() => console.log('Island loaded')}
+                                        onLoad={() => {}}
                                     />
                                 )}
 
