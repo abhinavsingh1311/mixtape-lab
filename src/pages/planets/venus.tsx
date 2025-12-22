@@ -28,7 +28,7 @@ export default function VenusPage() {
             title: "Resume scanner and Analysis using AI",
             description: "Comprehensive extraction, parsing and analysis system that provides score as per ATS and job recommnedations as per the resume",
             imageUrl: "/projects/resumeAI.png",
-            link: "https://projects-brown-alpha.vercel.app/"
+            link: "https://toastmyresume.dev/"
         },
         {
             title: "Plant Care Mobile Application",
