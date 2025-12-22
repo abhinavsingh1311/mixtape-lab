@@ -4,6 +4,12 @@ import Script from 'next/script';
 
 export default function VenusPage() {
     const projects = [
+       {
+            title: "Resume scanner",
+            description: "Users can upload a resume and get is tailored to match job description vi AI.",
+            imageUrl: "/projects/resume.png",
+            link: "https://toastmyresume.dev"
+        },
 
         {
             title: "Mixtape card generator",
