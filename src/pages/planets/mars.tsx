@@ -11,19 +11,6 @@ export default function MarsPage() {
             role: "Full Stack Developer",
             period: "May 2025 - August 2025",
             description: [
-                "Reduced data processing time by 40% through optimized PostgreSQL schema and efficient data pipelines",
-                "Enhanced security by 85% implementing JWT tokenization and role-based access control",
-                "Accelerated workflows by 35% with intuitive React interfaces for product management",
-                "Delivered project 2 weeks ahead of schedule with an A+ grade"
-            ],
-            technologies: ["React", "PostgreSQL", "Supabase", "Digital Ocean", "JWT", "REST APIs"]
-        },
-        {
-            company: "DMIT CSD Capstone Project",
-            link: "https://certifiedorigins.space",
-            role: "Full Stack Developer",
-            period: "September 2024 - December 2024",
-            description: [
                 "Built full-stack data collection system using JavaScript, TypeScript, and Python, improving data processing efficiency by 25%",
                 "Integrated OpenAI API with structured prompt engineering, achieving 90%+ accuracy in automated medical data extraction",
                 "Developed RESTful APIs using JSON Server backend, reducing manual processing time from 4 hours to 45 minutes per batch",
@@ -34,6 +21,19 @@ export default function MarsPage() {
                 "Debugged and resolved 50+ production issues, improving system reliability and reducing downtime by 30%"
             ],
             technologies: ["Express.js", "PostgreSQL", "Supabase", "Next.js", "Python", "REST APIs", "OpenAI API"]
+        },
+        {
+            company: "DMIT CSD Capstone Project",
+            link: "https://certifiedorigins.space",
+            role: "Full Stack Developer",
+            period: "September 2024 - December 2024",
+            description: [
+                "Reduced data processing time by 40% through optimized PostgreSQL schema and efficient data pipelines",
+                "Enhanced security by 85% implementing JWT tokenization and role-based access control",
+                "Accelerated workflows by 35% with intuitive React interfaces for product management",
+                "Delivered project 2 weeks ahead of schedule with an A+ grade"
+            ],
+            technologies: ["React", "PostgreSQL", "Supabase", "Digital Ocean", "JWT", "REST APIs"]
         }
     ];
 
