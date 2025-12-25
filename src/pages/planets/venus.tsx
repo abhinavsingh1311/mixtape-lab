@@ -11,19 +11,13 @@ export default function VenusPage() {
             imageUrl: "/projects/mixtape.png",
             link: "https://somemixtapes.com"
         },
-
         {
-            title: "Projects",
-            description: "I have added all of my projects in this github repository. Take a look at those by clicking the link!",
-            imageUrl: "/projects/projects.png",
-            link: "https://github.com/abhinavsingh1311/Projects.git"
-        },
-        {
-            title: "Supply Chain Management System",
-            description: "Comprehensive supply chain management system with secure authentication and efficient data pipelines",
-            imageUrl: "/projects/capstone.png",
-            link: "https://certifiedorigins.space"
-        },
+            title: "WebHooks Service",
+            description: "Start delivering webhooks with confidence. No more lost events!",
+            imageUrl: "/projects/whds.png",
+            link: "https://github.com/abhinavsingh1311/webhooks-delivery-service"
+        }
+        ,
         {
             title: "Resume scanner and Analysis using AI",
             description: "Comprehensive extraction, parsing and analysis system that provides score as per ATS and job recommnedations as per the resume",
@@ -31,10 +25,23 @@ export default function VenusPage() {
             link: "https://toastmyresume.dev/"
         },
         {
+            title: "Supply Chain Management System",
+            description: "Comprehensive supply chain management system with secure authentication and efficient data pipelines",
+            imageUrl: "/projects/capstone.png",
+            link: "https://certifiedorigins.space"
+        },
+
+        {
             title: "Plant Care Mobile Application",
             description: "Comprehensive application to ensure plants get the care they deserve , built using flutter and firebase",
             imageUrl: "/projects/projects.png",
             link: "https://github.com/abhinavsingh1311/plant_mobile_app.git"
+        },
+        {
+            title: "Projects",
+            description: "I have added all of my projects in this github repository. Take a look at those by clicking the link!",
+            imageUrl: "/projects/projects.png",
+            link: "https://github.com/abhinavsingh1311/Projects.git"
         }
 
     ];
