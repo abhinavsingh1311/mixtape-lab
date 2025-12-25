@@ -15,7 +15,7 @@ export default function VenusPage() {
             title: "WebHooks Service",
             description: "Start delivering webhooks with confidence. No more lost events!",
             imageUrl: "/projects/whds.png",
-            link: "https://github.com/abhinavsingh1311/webhooks-delivery-service"
+            link: "https://webhook-delivery-b6bshhhtg4gyf5gm.canadacentral-01.azurewebsites.net"
         }
         ,
         {
