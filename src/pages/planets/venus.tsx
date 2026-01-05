@@ -4,6 +4,12 @@ import Script from 'next/script';
 
 export default function VenusPage() {
     const projects = [
+              {
+            title: "roast as a service",
+            description: "Allows configurable roasts using OpenAI API that can be integrated with Discord, websites etc.",
+            imageUrl: "/projects/roast.png",
+            link: "https://roast-api-two.vercel.app"
+        },
 
         {
             title: "Mixtape card generator",
