@@ -14,7 +14,7 @@
     "@react-three/fiber": "^8.13.0",
     "@react-three/postprocessing": "^2.14.0",
     "@types/howler": "^2.2.12",
-    "framer-motion": "^10.16.4",
+    "framer-motion": "^12.29.2",
     "framer-motion-3d": "^10.16.4",
     "gltf-pipeline": "^4.1.0",
     "gsap": "^3.12.7",
